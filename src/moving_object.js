@@ -1,13 +1,7 @@
-const movingObject = new MovingObject({
-  pos: [30, 30],
-  vel: [10, 10],
-  radius: 5,
-  color: "#00FF00"
-});
 
 function MovingObject(options) {
   this.pos = options.pos;
-  this.vel = options.vel;
+  this.speed = options.speed;
   this.radius = options.radius;
   this.color = options.color;
 }
@@ -20,6 +14,13 @@ MovingObject.prototype.draw = function(ctx) {
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 1;
   ctx.stroke();
+}
+
+MovingObject.prototype.move = function() {
+  let position = this.pos;
+  let speed = this.speed;
+
+  this.pos = [position[0], position[1] + speed];
 }
 
 module.exports = MovingObject;

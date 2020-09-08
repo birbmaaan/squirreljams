@@ -1,14 +1,16 @@
 const MovingObject = require('./moving_object');
 const Util = require('./util');
-const COLOR = 'black';
-const RADIUS = 5;
+const COLOR = 'orange';
+const RADIUS = 20;
+const POS = [75, 840];
+const SPEED = 10;
 
-function Squirrel(options) {
-  const vector = Util.randomVector(5);
-  options.vel = Util.scale(vector, 5);
+function Squirrel() {
+  options = {};
   options.radius = RADIUS;
   options.color = COLOR;
-
+  options.pos = POS;
+  options.speed = SPEED;
   MovingObject.call(this, options);
 }
 

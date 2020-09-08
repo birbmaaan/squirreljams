@@ -93,7 +93,18 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const Obstacle = __webpack_require__(/*! ./obstacles */ \"./src/obstacles.js\");\n\nfunction Game() {\n  this.DIM_X = 500;\n  this.DIM_Y = 500;\n  this.NUM_OBSTACLES = 10;\n  this.OBSTACLES = [];\n}\n\nGame.prototype.addObstacles = function () {\n  for (let i = 0; i < this.NUM_OBSTACLES; i++) {\n    let pos = this.randomPosition(this.DIM_X, this.DIM_Y);\n    let tree = new Obstacle({pos, game: this});\n    this.OBSTACLES.push(tree);\n  }\n}\n\nGame.prototype.randomPosition = function(x, y) {\n  let pos = [];\n  pos.push(Math.floor(Math.random() * x));\n  pos.push(Math.floor(Math.random() * y));\n  return pos;\n}\n\nGame.prototype.draw = function(ctx) {\n  ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);\n  this.OBSTACLES.forEach(tree => tree.draw(ctx));\n}\n\nmodule.exports = Game;\n\n//# sourceURL=webpack:///./src/game.js?");
+eval("const Obstacle = __webpack_require__(/*! ./obstacles */ \"./src/obstacles.js\");\nconst Squirrel = __webpack_require__(/*! ./squirrel */ \"./src/squirrel.js\");\n\nfunction Game() {\n  this.DIM_X = 300;\n  this.DIM_Y = 900;\n  this.NUM_OBSTACLES = 10;\n  this.OBSTACLES = [];\n  this.SQUIRREL = new Squirrel();\n}\n\nGame.prototype.addObstacles = function () {\n  if (this.OBSTACLES.length < this.NUM_OBSTACLES) {\n    for (let i = this.OBSTACLES.length; i < this.NUM_OBSTACLES; i++) {\n      let pos = this.randomPosition();\n      let tree = new Obstacle({pos, game: this});\n      this.OBSTACLES.push(tree);\n    }\n  }\n}\n\nGame.prototype.addObstacle = function () {\n  if (this.OBSTACLES.length < this.NUM_OBSTACLES) {\n    let pos = this.randomPosition();\n    let tree = new Obstacle({pos, game: this});\n    this.OBSTACLES.push(tree);\n  }\n}\n\nGame.prototype.randomPosition = function() {\n  let x = Math.random();\n  x = x > 0.5 ? 225 : 75;\n  let pos = [x, -70];\n\n  return pos;\n}\n\nGame.prototype.draw = function(ctx) {\n  ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);\n  this.OBSTACLES.forEach(tree => tree.draw(ctx)); \n  this.SQUIRREL.draw(ctx);\n}\n\nGame.prototype.moveObjects = function() {\n  this.OBSTACLES.forEach(tree => tree.move());\n}\n\nGame.prototype.removeObjects = function() {\n  let currentObstacles = [];\n  this.OBSTACLES.forEach(tree => {\n    if (tree.pos[1] < this.DIM_Y + tree.radius) {\n      currentObstacles.push(tree);\n    }\n  })\n  this.OBSTACLES = currentObstacles;\n}\n\nmodule.exports = Game;\n\n//# sourceURL=webpack:///./src/game.js?");
+
+/***/ }),
+
+/***/ "./src/game_view.js":
+/*!**************************!*\
+  !*** ./src/game_view.js ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const Game = __webpack_require__(/*! ./game */ \"./src/game.js\");\n\nfunction GameView(game, ctx) {\n  this.game = game;\n  this.ctx = ctx;\n  // this.game.addObstacles();\n}\n\nGameView.prototype.start = function() {\n   const that = this;\n   setInterval( function() {\n     that.game.moveObjects();\n     that.game.removeObjects();\n    //  that.game.addObstacles();\n     that.game.draw(that.ctx);\n   }, 20);\n\n   setInterval( function() {\n     that.game.addObstacle()\n   }, 1000)\n}\n\nmodule.exports = GameView;\n\n//# sourceURL=webpack:///./src/game_view.js?");
 
 /***/ }),
 
@@ -104,7 +115,7 @@ eval("const Obstacle = __webpack_require__(/*! ./obstacles */ \"./src/obstacles.
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const MovingObject = __webpack_require__(/*! ./moving_object.js */ \"./src/moving_object.js\");\nconst Squirrel = __webpack_require__(/*! ./squirrel */ \"./src/squirrel.js\");\nconst Obstacle = __webpack_require__(/*! ./obstacles */ \"./src/obstacles.js\");\nconst Game = __webpack_require__(/*! ./game */ \"./src/game.js\");\n\nwindow.MovingObject = MovingObject;\nwindow.Squirrel = Squirrel;\nwindow.Obstacle = Obstacle;\nwindow.Game = Game;\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  const canvas = document.getElementById('game-canvas');\n  console.log(\"It's working! It's working!\");\n  const ctx = canvas.getContext('2d')\n  window.ctx = ctx;\n\n})\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("const MovingObject = __webpack_require__(/*! ./moving_object.js */ \"./src/moving_object.js\");\nconst Squirrel = __webpack_require__(/*! ./squirrel */ \"./src/squirrel.js\");\nconst Obstacle = __webpack_require__(/*! ./obstacles */ \"./src/obstacles.js\");\nconst Game = __webpack_require__(/*! ./game */ \"./src/game.js\");\nconst GameView = __webpack_require__(/*! ./game_view */ \"./src/game_view.js\");\n\nwindow.MovingObject = MovingObject;\nwindow.Squirrel = Squirrel;\nwindow.Obstacle = Obstacle;\nwindow.Game = Game;\nwindow.GameView = GameView;\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  const canvas = document.getElementById('game-canvas');\n  console.log(\"It's working! It's working!\");\n  const ctx = canvas.getContext('2d')\n  window.ctx = ctx;\n\n  const game = new Game();\n  const newGame = new GameView(game, ctx);\n  newGame.start();\n})\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 
@@ -115,7 +126,7 @@ eval("const MovingObject = __webpack_require__(/*! ./moving_object.js */ \"./src
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("const movingObject = new MovingObject({\n  pos: [30, 30],\n  vel: [10, 10],\n  radius: 5,\n  color: \"#00FF00\"\n});\n\nfunction MovingObject(options) {\n  this.pos = options.pos;\n  this.vel = options.vel;\n  this.radius = options.radius;\n  this.color = options.color;\n}\n\nMovingObject.prototype.draw = function(ctx) {\n  ctx.beginPath();\n  ctx.arc(this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI);\n  ctx.fillStyle = this.color;\n  ctx.fill();\n  ctx.strokeStyle = 'black';\n  ctx.lineWidth = 1;\n  ctx.stroke();\n}\n\nmodule.exports = MovingObject;\n\n//# sourceURL=webpack:///./src/moving_object.js?");
+eval("\nfunction MovingObject(options) {\n  this.pos = options.pos;\n  this.speed = options.speed;\n  this.radius = options.radius;\n  this.color = options.color;\n}\n\nMovingObject.prototype.draw = function(ctx) {\n  ctx.beginPath();\n  ctx.arc(this.pos[0], this.pos[1], this.radius, 0, 2 * Math.PI);\n  ctx.fillStyle = this.color;\n  ctx.fill();\n  ctx.strokeStyle = 'black';\n  ctx.lineWidth = 1;\n  ctx.stroke();\n}\n\nMovingObject.prototype.move = function() {\n  let position = this.pos;\n  let speed = this.speed;\n\n  this.pos = [position[0], position[1] + speed];\n}\n\nmodule.exports = MovingObject;\n\n//# sourceURL=webpack:///./src/moving_object.js?");
 
 /***/ }),
 
@@ -126,7 +137,7 @@ eval("const movingObject = new MovingObject({\n  pos: [30, 30],\n  vel: [10, 10]
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const MovingObject = __webpack_require__(/*! ./moving_object */ \"./src/moving_object.js\");\nconst Util = __webpack_require__(/*! ./util */ \"./src/util.js\");\nconst COLOR = 'blue';\nconst RADIUS = 10;\n\nfunction Obstacle(options) {\n  const vector = Util.randomVector(5);\n  options.vel = Util.scale(vector, 5);\n  options.radius = RADIUS;\n  options.color = COLOR;\n\n  MovingObject.call(this, options);\n}\n\nUtil.inherits(Obstacle, MovingObject);\n\nmodule.exports = Obstacle;\n\n//# sourceURL=webpack:///./src/obstacles.js?");
+eval("const MovingObject = __webpack_require__(/*! ./moving_object */ \"./src/moving_object.js\");\nconst Util = __webpack_require__(/*! ./util */ \"./src/util.js\");\nconst COLOR = 'blue';\nconst RADIUS = 70;\n\nfunction Obstacle(options) {\n  options.speed = 5;\n  options.radius = RADIUS;\n  options.color = COLOR;\n  MovingObject.call(this, options);\n}\n\n \nUtil.inherits(Obstacle, MovingObject);\n\nmodule.exports = Obstacle;\n\n//# sourceURL=webpack:///./src/obstacles.js?");
 
 /***/ }),
 
@@ -137,7 +148,7 @@ eval("const MovingObject = __webpack_require__(/*! ./moving_object */ \"./src/mo
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const MovingObject = __webpack_require__(/*! ./moving_object */ \"./src/moving_object.js\");\nconst Util = __webpack_require__(/*! ./util */ \"./src/util.js\");\nconst COLOR = 'black';\nconst RADIUS = 5;\n\nfunction Squirrel(options) {\n  const vector = Util.randomVector(5);\n  options.vel = Util.scale(vector, 5);\n  options.radius = RADIUS;\n  options.color = COLOR;\n\n  MovingObject.call(this, options);\n}\n\nUtil.inherits(Squirrel, MovingObject);\n\nmodule.exports = Squirrel;\n\n//# sourceURL=webpack:///./src/squirrel.js?");
+eval("const MovingObject = __webpack_require__(/*! ./moving_object */ \"./src/moving_object.js\");\nconst Util = __webpack_require__(/*! ./util */ \"./src/util.js\");\nconst COLOR = 'orange';\nconst RADIUS = 20;\nconst POS = [75, 840];\nconst SPEED = 10;\n\nfunction Squirrel() {\n  options = {};\n  options.radius = RADIUS;\n  options.color = COLOR;\n  options.pos = POS;\n  options.speed = SPEED;\n  MovingObject.call(this, options);\n}\n\nUtil.inherits(Squirrel, MovingObject);\n\nmodule.exports = Squirrel;\n\n//# sourceURL=webpack:///./src/squirrel.js?");
 
 /***/ }),
 
@@ -148,7 +159,7 @@ eval("const MovingObject = __webpack_require__(/*! ./moving_object */ \"./src/mo
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("const Util = {\n  inherits(childClass, parentClass) {\n    function Surrogate() {};\n    Surrogate.prototype = parentClass.prototype;\n    childClass.prototype = new Surrogate();\n    childClass.prototype.constructor = childClass;\n  },\n  randomVector(length) {\n    const deg = 2 * Math.PI * Math.random();\n    return Util.scale([Math.sin(deg), Math.cos(deg)], length);\n  },\n  scale(vector, m) {\n    return [vector[0] * m, vector[1] * m];\n  }\n};\n\nmodule.exports = Util;\n\n//# sourceURL=webpack:///./src/util.js?");
+eval("const Util = {\n  inherits(childClass, parentClass) {\n    function Surrogate() {};\n    Surrogate.prototype = parentClass.prototype;\n    childClass.prototype = new Surrogate();\n    childClass.prototype.constructor = childClass;\n  },\n};\n\nmodule.exports = Util;\n\n//# sourceURL=webpack:///./src/util.js?");
 
 /***/ })
 
