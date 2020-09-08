@@ -6,15 +6,31 @@ function Game() {
   this.DIM_Y = 900;
   this.NUM_OBSTACLES = 10;
   this.OBSTACLES = [];
-  this.SQUIRREL = new Squirrel();
+  this.squirrels = [];
+}
+
+Game.prototype.add = function add(object) {
+  if (object instanceof Obstacle) {
+    this.OBSTACLES.push(object);
+  } else if (object instanceof Squirrel) {
+    this.squirrels.push(object);
+  } else {
+    throw new Error('unknown object');
+  }
+}
+
+Game.prototype.addSquirrel = function() {
+  const squirrel = new Squirrel();
+
+  this.add(squirrel);
+  return squirrel;
 }
 
 Game.prototype.addObstacles = function () {
   if (this.OBSTACLES.length < this.NUM_OBSTACLES) {
     for (let i = this.OBSTACLES.length; i < this.NUM_OBSTACLES; i++) {
       let pos = this.randomPosition();
-      let tree = new Obstacle({pos, game: this});
-      this.OBSTACLES.push(tree);
+      this.add(new Obstacle({pos, game: this}));
     }
   }
 }
@@ -22,8 +38,7 @@ Game.prototype.addObstacles = function () {
 Game.prototype.addObstacle = function () {
   if (this.OBSTACLES.length < this.NUM_OBSTACLES) {
     let pos = this.randomPosition();
-    let tree = new Obstacle({pos, game: this});
-    this.OBSTACLES.push(tree);
+    this.add(new Obstacle({pos, game: this}));
   }
 }
 
@@ -38,7 +53,7 @@ Game.prototype.randomPosition = function() {
 Game.prototype.draw = function(ctx) {
   ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
   this.OBSTACLES.forEach(tree => tree.draw(ctx)); 
-  this.SQUIRREL.draw(ctx);
+  this.squirrels.forEach(squirrel => squirrel.draw(ctx));
 }
 
 Game.prototype.moveObjects = function() {
