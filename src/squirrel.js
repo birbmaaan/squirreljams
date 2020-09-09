@@ -3,7 +3,8 @@ import Util from './util';
 
 const COLOR = 'orange';
 const RADIUS = 40;
-const POS = [565, 660];
+const POS = [545, 600];
+const SIZE = [40, 80]
 const SPEED = 10;
 
 class Squirrel extends MovingObject {
@@ -15,11 +16,21 @@ class Squirrel extends MovingObject {
     options.speed = SPEED;
     super(options);
     this.moving = false;
+    this.size = SIZE;
     Util.inherits(Squirrel, MovingObject);
   }
 
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.rect(this.pos[0], this.pos[1], this.size[0], this.size[1]);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
   step(direction) {
-    debugger
     if (direction === 'left' && this.moving === false) {
       this.moving = true;
       this.leftMovement();
@@ -51,7 +62,7 @@ class Squirrel extends MovingObject {
     if (this.pos[0] < 440) {
       this.pos[0] = 440;
       cancelAnimationFrame(this.jumpAnimationLeft);
-      setTimeout(() => this.jumpBack(), 200);
+      setTimeout(() => this.jumpBack(), 300);
     }
   }
   
@@ -72,7 +83,7 @@ class Squirrel extends MovingObject {
     if (this.pos[0] > 840) {
       this.pos[0] = 840;
       cancelAnimationFrame(this.jumpAnimationRight);
-      setTimeout(() => this.jumpBack(), 200);
+      setTimeout(() => this.jumpBack(), 300);
     }
   }
   

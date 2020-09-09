@@ -45,7 +45,7 @@ class Game {
   
   randomPosition() {
     let x = Math.random();
-    x = x > 0.5 ? 715 : 565;
+    x = x > 0.5 ? 535 : 685;
     let pos = [x, -70];
     
     return pos;
@@ -69,6 +69,27 @@ class Game {
       }
     })
     this.OBSTACLES = currentObstacles;
+  }
+
+  detectCollision() {
+    const squirrel = this.squirrels[0];
+    let dead = false;
+    this.OBSTACLES.forEach(tree => {
+      if (this.beenHit(squirrel, tree)) {
+        dead = true;
+      }
+    })
+    return dead;
+  }
+
+  beenHit(squirrel, tree) {
+    if (squirrel.pos[0] < tree.pos[0] + tree.size[0] &&
+        squirrel.pos[0] + squirrel.size[0] > tree.pos[0] &&
+        squirrel.pos[1] < tree.pos[1] + tree.size[1] &&
+        squirrel.pos[1] + squirrel.size[1] > tree.pos[1]) {
+      debugger;
+      return true;
+    }
   }
   
 }

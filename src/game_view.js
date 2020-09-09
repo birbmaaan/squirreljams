@@ -5,12 +5,18 @@ class GameView {
     this.game = game;
     this.ctx = ctx;
     this.squirrel = this.game.addSquirrel();
+    this.gameId = '';
+    this.obstacleId = '';
     this.moves = {
       d: 'left',
       f: 'right',
     }
   }
 
+  restart() {
+    this.game = new Game();
+    this.squirrel = this.game.addSquirrel();
+  }
 
   bindKeyHandlers() {
     const squirrel = this.squirrel;
@@ -24,16 +30,20 @@ class GameView {
   start() {
     this.bindKeyHandlers();
     const that = this;
-    setInterval( function() {
+    this.gameId = setInterval( function() {
       that.game.moveObjects();
       that.game.removeObjects();
-      //  that.game.addObstacles();
       that.game.draw(that.ctx);
+      if (that.game.detectCollision()) {
+        alert('you died');
+        that.restart();
+      }
     }, 20);
-  
-    setInterval( function() {
+
+    this.obstacleId = setInterval( function() {
       that.game.addObstacle()
     }, 1000)
+
   }
 
 }
