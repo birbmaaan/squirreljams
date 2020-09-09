@@ -1,39 +1,43 @@
-const Game = require("./game");
+import Game from './game';
 
-function GameView(game, ctx) {
-  this.game = game;
-  this.ctx = ctx;
-  this.squirrel = this.game.addSquirrel();
+class GameView {
+  constructor(game, ctx) {
+    this.game = game;
+    this.ctx = ctx;
+    this.squirrel = this.game.addSquirrel();
+    this.moves = {
+      d: 'left',
+      f: 'right',
+    }
+  }
+
+
+  bindKeyHandlers() {
+    const squirrel = this.squirrel;
+    document.addEventListener('keypress', (e) => {
+      debugger
+      Object.keys(this.moves).forEach((k) => {
+        const move = this.moves[k];
+        if (k === e.key) {squirrel.step(move)};
+      });
+    })
+  }
+
+  start() {
+    this.bindKeyHandlers();
+    const that = this;
+    setInterval( function() {
+      that.game.moveObjects();
+      that.game.removeObjects();
+      //  that.game.addObstacles();
+      that.game.draw(that.ctx);
+    }, 20);
+  
+    setInterval( function() {
+      that.game.addObstacle()
+    }, 1000)
+  }
+
 }
 
-GameView.MOVES = {
-  d: 'left',
-  f: 'right',   
-}
-
-GameView.prototype.bindKeyHandlers = function bindKeyHandlers() {
-  const squirrel = this.squirrel;
-  document.addEventListener('keypress', (e) => {
-    Object.keys(GameView.MOVES).forEach((k) => {
-      const move = GameView.MOVES[k];
-      if (k === e.key) {squirrel.step(move)};
-    });
-  })
-}
-
-GameView.prototype.start = function() {
-  this.bindKeyHandlers();
-   const that = this;
-   setInterval( function() {
-     that.game.moveObjects();
-     that.game.removeObjects();
-    //  that.game.addObstacles();
-     that.game.draw(that.ctx);
-   }, 20);
-
-   setInterval( function() {
-     that.game.addObstacle()
-   }, 1000)
-}
-
-module.exports = GameView;
+export default GameView;

@@ -1,8 +1,8 @@
-const MovingObject = require('./moving_object.js');
-const Squirrel = require('./squirrel');
-const Obstacle = require('./obstacles');
-const Game = require('./game');
-const GameView = require('./game_view');
+import MovingObject from './moving_object';
+import Squirrel from './squirrel';
+import Obstacle from './obstacles';
+import Game from './game';
+import GameView from './game_view'
 
 window.MovingObject = MovingObject;
 window.Squirrel = Squirrel;
