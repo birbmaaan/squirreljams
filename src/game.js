@@ -2,7 +2,7 @@ const Obstacle = require("./obstacles");
 const Squirrel = require('./squirrel');
 
 function Game() {
-  this.DIM_X = 300;
+  this.DIM_X = 900;
   this.DIM_Y = 900;
   this.NUM_OBSTACLES = 10;
   this.OBSTACLES = [];
