@@ -45,7 +45,7 @@ class Game {
   
   randomPosition() {
     let x = Math.random();
-    x = x > 0.5 ? 225 : 75;
+    x = x > 0.5 ? 715 : 565;
     let pos = [x, -70];
     
     return pos;

@@ -2,8 +2,8 @@ import MovingObject from './moving_object';
 import Util from './util';
 
 const COLOR = 'orange';
-const RADIUS = 20;
-const POS = [80, 840];
+const RADIUS = 40;
+const POS = [565, 660];
 const SPEED = 10;
 
 class Squirrel extends MovingObject {
@@ -30,7 +30,7 @@ class Squirrel extends MovingObject {
   }
 
   leftMovement() {
-    if (this.pos[0] === 75) {
+    if (this.pos[0] === 565) {
       this.jumpLeft();
     } else {
       this.moveLeft();
@@ -38,7 +38,7 @@ class Squirrel extends MovingObject {
   }
   
   rightMovement() {
-    if (this.pos[0] === 225) {
+    if (this.pos[0] === 715) {
       this.jumpRight();
     } else {
       this.moveRight();
@@ -48,19 +48,19 @@ class Squirrel extends MovingObject {
   jumpLeft() {
     this.pos[0] -= 7
     this.jumpAnimationLeft = requestAnimationFrame(this.jumpLeft.bind(this))
-    if (this.pos[0] < -50) {
-      this.pos[0] = -50;
+    if (this.pos[0] < 440) {
+      this.pos[0] = 440;
       cancelAnimationFrame(this.jumpAnimationLeft);
-      this.jumpBack();
+      setTimeout(() => this.jumpBack(), 200);
     }
   }
-
+  
   moveLeft() {
     this.pos[0] -= 7
     this.moveAnimationLeft = requestAnimationFrame(this.moveLeft.bind(this))
-
-    if (this.pos[0] <= 75) {
-      this.pos[0] = 75;
+    
+    if (this.pos[0] <= 565) {
+      this.pos[0] = 565;
       this.moving = false;
       cancelAnimationFrame(this.moveAnimationLeft);
     }
@@ -69,10 +69,10 @@ class Squirrel extends MovingObject {
   jumpRight() {
     this.pos[0] += 7
     this.jumpAnimationRight = requestAnimationFrame(this.jumpRight.bind(this))
-    if (this.pos[0] > 350) {
-      this.pos[0] = 350;
+    if (this.pos[0] > 840) {
+      this.pos[0] = 840;
       cancelAnimationFrame(this.jumpAnimationRight);
-      this.jumpBack();
+      setTimeout(() => this.jumpBack(), 200);
     }
   }
   
@@ -80,28 +80,27 @@ class Squirrel extends MovingObject {
     this.pos[0] += 7
     this.moveAnimationRight = requestAnimationFrame(this.moveRight.bind(this))
 
-    if (this.pos[0] >= 225) {
-      this.pos[0] = 225;
+    if (this.pos[0] >= 715) {
+      this.pos[0] = 715;
       this.moving = false;
       cancelAnimationFrame(this.moveAnimationRight);
     }
   }
   
   jumpBack() {
-    debugger
     let distance;
     let location;
-    if (this.pos[0] < 150) {
-      distance = 5;
-      location = 75;
+    if (this.pos[0] < 640) {
+      distance = 7;
+      location = 565;
     } else {
-      distance = -5;
-      location = 225;
+      distance = -7;
+      location = 715;
     } 
 
     this.pos[0] += distance;
     this.jumpAnimationBack = requestAnimationFrame(this.jumpBack.bind(this))
-    if ((distance === -5 && this.pos[0] <= 225) || (distance === 5 && this.pos[0] >= 75)) {
+    if ((distance === -7 && this.pos[0] <= 715) || (distance === 7 && this.pos[0] >= 565)) {
       this.pos[0] = location;
       this.moving = false;
       cancelAnimationFrame(this.jumpAnimationBack);

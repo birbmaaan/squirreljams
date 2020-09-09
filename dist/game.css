@@ -1,3 +1,9 @@
+body {
+  display: flex;
+  background-color: #333333;
+}
+
 #game-canvas {
   background-color: black;
+  margin: 50px auto;
 }
