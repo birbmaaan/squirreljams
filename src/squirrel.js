@@ -1,5 +1,5 @@
-import MovingObject from './moving_object';
-import Util from './util';
+import MovingObject from './moving_object.js';
+import Util from './util.js';
 
 const COLOR = 'orange';
 const RADIUS = 40;

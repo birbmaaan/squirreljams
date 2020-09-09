@@ -1,4 +1,4 @@
-import Game from './game';
+import Game from './game.js';
 
 class GameView {
   constructor(game, ctx) {

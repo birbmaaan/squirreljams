@@ -1,8 +1,8 @@
-import MovingObject from './moving_object';
-import Squirrel from './squirrel';
-import Obstacle from './obstacles';
-import Game from './game';
-import GameView from './game_view'
+import MovingObject from './moving_object.js';
+import Squirrel from './squirrel.js';
+import Obstacle from './obstacles.js';
+import Game from './game.js';
+import GameView from './game_view.js'
 
 window.MovingObject = MovingObject;
 window.Squirrel = Squirrel;

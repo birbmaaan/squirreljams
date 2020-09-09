@@ -1,5 +1,5 @@
-import Obstacles from './obstacles';
-import Squirrel from './squirrel';
+import Obstacle from './obstacles.js';
+import Squirrel from './squirrel.js';
 
 class Game {
   constructor() {
@@ -87,7 +87,6 @@ class Game {
         squirrel.pos[0] + squirrel.size[0] > tree.pos[0] &&
         squirrel.pos[1] < tree.pos[1] + tree.size[1] &&
         squirrel.pos[1] + squirrel.size[1] > tree.pos[1]) {
-      debugger;
       return true;
     }
   }
