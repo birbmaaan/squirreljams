@@ -2,17 +2,30 @@ import MovingObject from './moving_object.js';
 import Util from './util.js';
 
 const COLOR = 'blue';
-const RADIUS = 70;
+const POS = {
+  1: [515, 665],
+  2: [95, 245],
+  3: [935, 1185]}
+
 
 class Obstacle extends MovingObject {
-  constructor(options) {
-    options.speed = 5;
-    options.radius = RADIUS;
-    options.color = COLOR;
-    super(options);
+  constructor(obstacleNo) {
+    super();
+    this.speed = 5;
+    this.color = COLOR;
+    this.pos = this.randomPosition(obstacleNo)
     this.size = [100, 40]
     Util.inherits(Obstacle, MovingObject);
   }
+
+  randomPosition(obstacleNo) {
+    let x = Math.random();
+    x = x > 0.5 ? POS[obstacleNo][1] : POS[obstacleNo][0];
+    let pos = [x, -70];
+
+    return pos;
+  }
+
 
   draw(ctx) {
     ctx.beginPath();

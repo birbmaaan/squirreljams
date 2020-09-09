@@ -10,16 +10,16 @@ class GameView {
     this.gameId = '';
     this.obstacleId = '';
     this.moves = {
-      d: 'left',
-      f: 'right',
+      f: 'left',
+      j: 'right',
     },
     this.moves2 = {
-      a: 'left',
-      s: 'right',
+      s: 'left',
+      d: 'right',
     },
     this.moves3 = {
-      j: 'left',
-      k: 'right'
+      k: 'left',
+      l: 'right'
     }
   }
 
@@ -42,7 +42,6 @@ class GameView {
   bindKeyHandlers2() {
     const squirrel = this.squirrel2;
     document.addEventListener('keypress', (e) => {
-      debugger;
       Object.keys(this.moves2).forEach((k) => {
         if (k === e.key) {squirrel.step(this.moves2[k])};
       });
@@ -52,7 +51,6 @@ class GameView {
   bindKeyHandlers3() {
     const squirrel = this.squirrel3;
     document.addEventListener('keypress', (e) => {
-      debugger;
       Object.keys(this.moves3).forEach((k) => {
         if (k === e.key) {squirrel.step(this.moves3[k])};
       });
@@ -73,19 +71,17 @@ class GameView {
     }, 20);
 
     setTimeout(() => {
-      debugger;
       this.squirrel2 = this.game.addSquirrel(2);
       this.bindKeyHandlers2();
     }, 1000);
     
     setTimeout(() => {
-      debugger;
       this.squirrel3 = this.game.addSquirrel(3);
       this.bindKeyHandlers3();
     }, 2000);
-    // this.obstacleId = setInterval( function() {
-    //   that.game.addObstacle()
-    // }, 1000)
+    this.obstacleId = setInterval( function() {
+      that.game.addObstacle(1)
+    }, 1000)
 
   }
 

@@ -1,9 +1,5 @@
 class MovingObject {
-  constructor(options) {
-    this.pos = options.pos;
-    this.speed = options.speed;
-    this.radius = options.radius;
-    this.color = options.color;
+  constructor() {
   }
   
   draw(ctx) {

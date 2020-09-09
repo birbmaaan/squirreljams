@@ -21,7 +21,6 @@ class Game {
   }
   
   addSquirrel(squirrelNo) {
-    debugger
     const squirrel = new Squirrel(squirrelNo);
     
     this.add(squirrel);
@@ -37,21 +36,12 @@ class Game {
     }
   }
   
-  addObstacle() {
+  addObstacle(obstacleNo) {
     if (this.OBSTACLES.length < this.NUM_OBSTACLES) {
-      let pos = this.randomPosition();
-      this.add(new Obstacle({pos, game: this}));
+      this.add(new Obstacle(obstacleNo));
     }
   }
-  
-  randomPosition() {
-    let x = Math.random();
-    x = x > 0.5 ? 535 : 685;
-    let pos = [x, -70];
-    
-    return pos;
-  }
-  
+
   draw(ctx) {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     this.OBSTACLES.forEach(tree => tree.draw(ctx)); 
@@ -65,7 +55,7 @@ class Game {
   removeObjects() {
     let currentObstacles = [];
     this.OBSTACLES.forEach(tree => {
-      if (tree.pos[1] < this.DIM_Y + tree.radius) {
+      if (tree.pos[1] < this.DIM_Y + tree.size[1]) {
         currentObstacles.push(tree);
       }
     })

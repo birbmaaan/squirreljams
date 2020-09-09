@@ -2,27 +2,24 @@ import MovingObject from './moving_object.js';
 import Util from './util.js';
 
 const COLOR = 'orange';
-const RADIUS = 40;
 const POS = {1: [545, 600], 2: [125, 600], 3: [965, 600]};
 const SIZE = [40, 80]
 const SPEED = 10;
 const POSITIONS = {
-  farleft: [0, 440, 20, 860],
-  left: [0, 565, 145, 985],
-  middle: [0, 640, 220, 1060],
-  right: [0, 715, 295, 1135],
-  farright: [0, 840, 420, 1260],
-  }
+  farleft: [0, 420, 0, 840],
+  left: [0, 545, 125, 965],
+  middle: [0, 620, 200, 1040],
+  right: [0, 695, 275, 1115],
+  farright: [0, 820, 400, 1240],
+}
 
 
 class Squirrel extends MovingObject {
   constructor(squirrelNo) {
-    let options = {};
-    options.radius = RADIUS;
-    options.color = COLOR;
-    options.pos = POS[squirrelNo];
-    options.speed = SPEED;
-    super(options);
+    super();
+    this.color = COLOR;
+    this.pos = POS[squirrelNo];
+    this.speed = SPEED;
     this.moving = false;
     this.size = SIZE; 
     this.positions = {
