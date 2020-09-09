@@ -15,10 +15,8 @@ class GameView {
   bindKeyHandlers() {
     const squirrel = this.squirrel;
     document.addEventListener('keypress', (e) => {
-      debugger
       Object.keys(this.moves).forEach((k) => {
-        const move = this.moves[k];
-        if (k === e.key) {squirrel.step(move)};
+        if (k === e.key) {squirrel.step(this.moves[k])};
       });
     })
   }
