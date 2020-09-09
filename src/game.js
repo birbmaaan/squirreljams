@@ -3,8 +3,8 @@ import Squirrel from './squirrel.js';
 
 class Game {
   constructor() {
-    this.DIM_X = 900;
-    this.DIM_Y = 900;
+    this.DIM_X = 1280;
+    this.DIM_Y = 720;
     this.NUM_OBSTACLES = 10;
     this.OBSTACLES = [];
     this.squirrels = [];
@@ -20,8 +20,9 @@ class Game {
     }
   }
   
-  addSquirrel() {
-    const squirrel = new Squirrel();
+  addSquirrel(squirrelNo) {
+    debugger
+    const squirrel = new Squirrel(squirrelNo);
     
     this.add(squirrel);
     return squirrel;

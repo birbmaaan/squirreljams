@@ -3,20 +3,35 @@ import Util from './util.js';
 
 const COLOR = 'orange';
 const RADIUS = 40;
-const POS = [545, 600];
+const POS = {1: [545, 600], 2: [125, 600], 3: [965, 600]};
 const SIZE = [40, 80]
 const SPEED = 10;
+const POSITIONS = {
+  farleft: [0, 440, 20, 860],
+  left: [0, 565, 145, 985],
+  middle: [0, 640, 220, 1060],
+  right: [0, 715, 295, 1135],
+  farright: [0, 840, 420, 1260],
+  }
+
 
 class Squirrel extends MovingObject {
-  constructor() {
+  constructor(squirrelNo) {
     let options = {};
     options.radius = RADIUS;
     options.color = COLOR;
-    options.pos = POS;
+    options.pos = POS[squirrelNo];
     options.speed = SPEED;
     super(options);
     this.moving = false;
-    this.size = SIZE;
+    this.size = SIZE; 
+    this.positions = {
+      farleft: POSITIONS.farleft[squirrelNo],
+      left: POSITIONS.left[squirrelNo],
+      middle: POSITIONS.middle[squirrelNo],
+      right: POSITIONS.right[squirrelNo],
+      farright: POSITIONS.farright[squirrelNo]
+    }
     Util.inherits(Squirrel, MovingObject);
   }
 
@@ -41,7 +56,7 @@ class Squirrel extends MovingObject {
   }
 
   leftMovement() {
-    if (this.pos[0] === 565) {
+    if (this.pos[0] === this.positions.left) {
       this.jumpLeft();
     } else {
       this.moveLeft();
@@ -49,7 +64,7 @@ class Squirrel extends MovingObject {
   }
   
   rightMovement() {
-    if (this.pos[0] === 715) {
+    if (this.pos[0] === this.positions.right) {
       this.jumpRight();
     } else {
       this.moveRight();
@@ -59,8 +74,8 @@ class Squirrel extends MovingObject {
   jumpLeft() {
     this.pos[0] -= 7
     this.jumpAnimationLeft = requestAnimationFrame(this.jumpLeft.bind(this))
-    if (this.pos[0] < 440) {
-      this.pos[0] = 440;
+    if (this.pos[0] < this.positions.farleft) {
+      this.pos[0] = this.positions.farleft;
       cancelAnimationFrame(this.jumpAnimationLeft);
       setTimeout(() => this.jumpBack(), 300);
     }
@@ -70,8 +85,8 @@ class Squirrel extends MovingObject {
     this.pos[0] -= 7
     this.moveAnimationLeft = requestAnimationFrame(this.moveLeft.bind(this))
     
-    if (this.pos[0] <= 565) {
-      this.pos[0] = 565;
+    if (this.pos[0] <= this.positions.left) {
+      this.pos[0] = this.positions.left;
       this.moving = false;
       cancelAnimationFrame(this.moveAnimationLeft);
     }
@@ -80,8 +95,8 @@ class Squirrel extends MovingObject {
   jumpRight() {
     this.pos[0] += 7
     this.jumpAnimationRight = requestAnimationFrame(this.jumpRight.bind(this))
-    if (this.pos[0] > 840) {
-      this.pos[0] = 840;
+    if (this.pos[0] > this.positions.farright) {
+      this.pos[0] = this.positions.farright;
       cancelAnimationFrame(this.jumpAnimationRight);
       setTimeout(() => this.jumpBack(), 300);
     }
@@ -91,8 +106,8 @@ class Squirrel extends MovingObject {
     this.pos[0] += 7
     this.moveAnimationRight = requestAnimationFrame(this.moveRight.bind(this))
 
-    if (this.pos[0] >= 715) {
-      this.pos[0] = 715;
+    if (this.pos[0] >= this.positions.right) {
+      this.pos[0] = this.positions.right;
       this.moving = false;
       cancelAnimationFrame(this.moveAnimationRight);
     }
@@ -101,17 +116,18 @@ class Squirrel extends MovingObject {
   jumpBack() {
     let distance;
     let location;
-    if (this.pos[0] < 640) {
+    if (this.pos[0] < this.positions.middle) {
       distance = 7;
-      location = 565;
+      location = this.positions.left;
     } else {
       distance = -7;
-      location = 715;
+      location = this.positions.right;
     } 
 
     this.pos[0] += distance;
     this.jumpAnimationBack = requestAnimationFrame(this.jumpBack.bind(this))
-    if ((distance === -7 && this.pos[0] <= 715) || (distance === 7 && this.pos[0] >= 565)) {
+    if ((distance === -7 && this.pos[0] <= this.positions.right) || 
+        (distance === 7 && this.pos[0] >= this.positions.left)) {
       this.pos[0] = location;
       this.moving = false;
       cancelAnimationFrame(this.jumpAnimationBack);
