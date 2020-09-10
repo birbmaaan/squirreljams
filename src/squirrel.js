@@ -17,6 +17,7 @@ const POSITIONS = {
 class Squirrel extends MovingObject {
   constructor(squirrelNo) {
     super();
+    this.active = false;
     this.color = COLOR;
     this.pos = POS[squirrelNo];
     this.speed = SPEED;

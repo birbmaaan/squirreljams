@@ -13,6 +13,9 @@ class Game {
     }
     this.squirrels = [];
 
+    for (let i = 1; i <= 3; i++) {
+      this.add(new Squirrel(i));
+    }
     this.add(new Obstacle(1));
   }
   
@@ -33,15 +36,6 @@ class Game {
     return squirrel;
   }
   
-  addObstacles(num){
-    if (this.obstacles.num.length < this.NUM_OBSTACLES) {
-      for (let i = this.obstacles.num.length; i < this.NUM_OBSTACLES; i++) {
-        let pos = this.randomPosition();
-        this.add(new Obstacle({pos, game: this}));
-      }
-    }
-  }
-  
   addObstacle(num) {
     const that = this;
     let length = this.obstacles[num].length;
@@ -59,7 +53,9 @@ class Game {
     Object.keys(this.obstacles).forEach(num => {
       this.obstacles[num].forEach(tree => tree.draw(ctx)); 
     });
-    this.squirrels.forEach(squirrel => squirrel.draw(ctx));
+    this.squirrels.forEach(squirrel => {
+      if (squirrel.active) squirrel.draw(ctx);
+    });
   }
   
   moveObjects() {

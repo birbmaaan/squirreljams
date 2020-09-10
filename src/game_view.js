@@ -1,4 +1,5 @@
 import Game from './game.js';
+import Menu from './menu.js';
 
 class GameView {
   constructor(game, ctx) {
@@ -6,6 +7,10 @@ class GameView {
     this.gameState = {};
     this.ctx = ctx;
     this.paused = false;
+    this.playing = false;
+    this.squirrel = this.game.squirrels[0];
+    this.squirrel2 = this.game.squirrels[1];
+    this.squirrel3 = this.game.squirrels[2];
     this.moves = {
       d: 'left',
       f: 'right',
@@ -20,106 +25,110 @@ class GameView {
     }
   }
 
+  menu() { 
+    // const menu = new Menu();
+    console.log('this is the menu')
+    // menu.showText();
+  }
+
+  start() {
+    this.squirrel.active = true;
+    this.animate();
+
+    this.gameState[2] = setTimeout(() => {
+      this.squirrel2.active = true;
+    }, 10000);
+
+    this.gameState[4] = setTimeout(() => {
+      this.squirrel3.active = true;
+    }, 20000);
+  }
+
   restart() {
     debugger
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
-    this.start();
+    this.game = new Game();
+    this.playing = false;
+    this.paused = false;
+    this.menu();
   }
 
-  keyPress(e, squirrel, moves) {
-    Object.keys(moves).forEach((k) => {
-      if (k === e.key && !this.paused) { squirrel.step(moves[k]) };
-    });
-  }
+  menuButtons(e) {
+    debugger;
+    if (this.playing) {
+      switch (e.key) {
+        case " ":
+          if (this.paused) {
+            this.paused = false;
+            this.animate();
+          } else {
+            this.paused = true;
+          }
+          break;
+     
+        case "d":
+          if (this.squirrel.active && !this.paused) {
+            this.squirrel.step("left");
+          }
+          break;
+        case "f":
+          if (this.squirrel.active && !this.paused) {
+            this.squirrel.step("right");
+          }
+          break;
+        case "a":
+          if (this.squirrel2.active && !this.paused) {
+            this.squirrel2.step("left");
+          }
+          break;
+        case "s":
+          if (this.squirrel2.active && !this.paused) {
+            this.squirrel2.step("right");
+          }
+          break;
+        case "j":
+          if (this.squirrel3.active && !this.paused) {
+            this.squirrel3.step("left");
+          }
+          break;
+        case "k":
+          if (this.squirrel3.active && !this.paused) {
+            this.squirrel3.step("right");
+          }
+          break;
 
-  pauseGame(e) {
-    debugger
-    if (e.key === " " && this.paused === true) {
-      this.paused = false
-      this.animate();
-    } else if (e.key === ' ' && this.paused === false) {
-      this.paused = true;
+          default:
+            break;
+          }
+    } else {
+      switch (e.key) {
+        case " ":
+          debugger;
+          this.playing = true;
+          this.start();
+          break;
+        default:
+          break;
+      }
     }
   }
 
   bindKeyHandlers() {
-    const squirrel = this.game.squirrels[0];
-    document.addEventListener(
-      'keypress', 
-      (e) => this.keyPress(e, squirrel, this.moves),
-      false)
-    document.addEventListener('keypress', (e) => this.pauseGame(e));
+    document.addEventListener('keypress', this.menuButtons.bind(this))
   }
-
-  bindKeyHandlers2() {
-    const squirrel = this.game.squirrels[1];
-    document.addEventListener(
-      'keypress', 
-      (e) => this.keyPress(e, squirrel, this.moves2),
-      false)
-  }
-
-  bindKeyHandlers3() {
-    const squirrel = this.game.squirrels[2];
-    document.addEventListener(
-      'keypress',
-      (e) => this.keyPress(e, squirrel, this.moves3),
-      false)
-  }
-
-  reviveSquirrel() {
-
-  }
-
-  // waitWhilePaused() {
-  //   while (this.paused) {
-    
-  //   }
-  //   this.animate();
-  // }
 
   animate() {
-    const that = this;
-    if (!this.paused) {
-      this.game.addObstacle(1);
-      if (this.game.squirrels[1]) this.game.addObstacle(2);
-      if (this.game.squirrels[2]) this.game.addObstacle(3);
+    if (!this.paused && this.playing) {
+      if (this.squirrel.active) this.game.addObstacle(1);
+      if (this.squirrel2.active) this.game.addObstacle(2);
+      if (this.squirrel3.active) this.game.addObstacle(3);
       this.game.moveObjects();
       this.game.removeObjects();
       this.game.draw(this.ctx);
       requestAnimationFrame(this.animate.bind(this));
     }
-
   }
 
-  start() {
-    this.squirrel = this.game.addSquirrel(1);
-    this.bindKeyHandlers();
-    const that = this;
-    // this.gameState[1] = setInterval( function() {
-    //   if (!that.paused) {
-    //     that.game.moveObjects();
-    //     that.game.removeObjects();
-    //     that.game.draw(that.ctx);
-    //   }
-    //   // if (that.game.detectCollision()) {
-    //   //   alert('you died');
-    //   //   debugger;
-    //   //   that.restart();
-    //   // }
-    // }, 20);
-    this.animate();
-
-    this.gameState[2] = setTimeout(() => {
-      this.squirrel2 = this.game.addSquirrel(2);
-      this.bindKeyHandlers2();
-    }, 10000);
-    
-    this.gameState[4] = setTimeout(() => {
-      this.squirrel3 = this.game.addSquirrel(3);
-      this.bindKeyHandlers3();
-    }, 20000);
-  }
 
 }
 

@@ -18,5 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const game = new Game();
   const newGame = new GameView(game, ctx);
-  newGame.start();
+  newGame.bindKeyHandlers();
+  newGame.menu();
 })
