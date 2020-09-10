@@ -9,11 +9,22 @@ canvas {
   left: calc(50% - 640px);
 }
 
+img {
+  display: none;
+}
+
 #game-canvas {
   z-index: 2;
 }
 
+#game-level {
+  z-index: 1;
+  /* background-image: url('../assets/Trunk\ 04.png'); */
+  background-size: 100%;
+}
+
 #game-background {
   z-index: 0;
-  background-color: black;
+  background-image: url('../assets/Background\ 02.png');
+  background-size: cover;
 }

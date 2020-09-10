@@ -1,28 +1,14 @@
 import Game from './game.js';
 import Menu from './menu.js';
+import Background from './background.js';
 
 class GameView {
   constructor(game, ctx) {
     this.game = game;
-    this.gameState = {};
+    this.timeOuts = {};
     this.ctx = ctx;
     this.paused = false;
     this.playing = false;
-    this.squirrel = this.game.squirrels[0];
-    this.squirrel2 = this.game.squirrels[1];
-    this.squirrel3 = this.game.squirrels[2];
-    this.moves = {
-      d: 'left',
-      f: 'right',
-    },
-    this.moves2 = {
-      a: 'left',
-      s: 'right',
-    },
-    this.moves3 = {
-      j: 'left',
-      k: 'right'
-    }
   }
 
   menu() { 
@@ -32,29 +18,69 @@ class GameView {
   }
 
   start() {
-    this.squirrel.active = true;
+    debugger;
+    // Background.drawTrees();
+    this.game.squirrels[0].active = true;
+    this.timeOuts[3] = setTimeout(() => {
+      this.game.liveObstacles[0] = true;
+    }, 2500);
     this.animate();
 
-    this.gameState[2] = setTimeout(() => {
-      this.squirrel2.active = true;
+    this.timeOuts[1] = setTimeout(() => {
+      this.game.squirrels[1].active = true;
+      this.timeOuts[4] = setTimeout(() => {
+        this.game.liveObstacles[1] = true;
+      }, 2500);
     }, 10000);
 
-    this.gameState[4] = setTimeout(() => {
-      this.squirrel3.active = true;
+    this.timeOuts[2] = setTimeout(() => {
+      this.game.squirrels[2].active = true;
+      this.timeOuts[5] = setTimeout(() => {
+        this.game.liveObstacles[2] = true;
+      }, 2500);
     }, 20000);
   }
 
   restart() {
-    debugger
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+    Object.keys(this.timeOuts).forEach((timeout) => {
+      clearTimeout(this.timeOuts[timeout]);
+    })
     this.game = new Game();
+    this.game.squirrels.forEach(squirrel => {
+      squirrel.active = false;
+    })
+    this.game.liveObstacles.forEach(obstacle => {obstacle = false})
     this.playing = false;
     this.paused = false;
     this.menu();
   }
 
+  animate() {
+    if (!this.paused && this.playing) {
+      if (this.game.detectCollision()) {
+        alert('you died');
+        this.restart();
+      }
+
+      for (let i = 0; i <= 2; i++) {
+        if (this.game.squirrels[i].active && this.game.liveObstacles[i]) {
+          this.game.addObstacle(i);
+        } 
+      }
+      this.game.moveObjects();
+      this.game.removeObjects();
+      this.game.draw(this.ctx);
+      this.game.trees[0].draw();
+      requestAnimationFrame(this.animate.bind(this));
+    }
+  }
+
+  bindKeyHandlers() {
+    document.addEventListener('keypress', this.menuButtons.bind(this))
+  }
+
   menuButtons(e) {
-    debugger;
     if (this.playing) {
       switch (e.key) {
         case " ":
@@ -67,33 +93,33 @@ class GameView {
           break;
      
         case "d":
-          if (this.squirrel.active && !this.paused) {
-            this.squirrel.step("left");
+          if (this.game.squirrels[0].active && !this.paused) {
+            this.game.squirrels[0].step("left");
           }
           break;
         case "f":
-          if (this.squirrel.active && !this.paused) {
-            this.squirrel.step("right");
+          if (this.game.squirrels[0].active && !this.paused) {
+            this.game.squirrels[0].step("right");
           }
           break;
         case "a":
-          if (this.squirrel2.active && !this.paused) {
-            this.squirrel2.step("left");
+          if (this.game.squirrels[1].active && !this.paused) {
+            this.game.squirrels[1].step("left");
           }
           break;
         case "s":
-          if (this.squirrel2.active && !this.paused) {
-            this.squirrel2.step("right");
+          if (this.game.squirrels[1].active && !this.paused) {
+            this.game.squirrels[1].step("right");
           }
           break;
         case "j":
-          if (this.squirrel3.active && !this.paused) {
-            this.squirrel3.step("left");
+          if (this.game.squirrels[2].active && !this.paused) {
+            this.game.squirrels[2].step("left");
           }
           break;
         case "k":
-          if (this.squirrel3.active && !this.paused) {
-            this.squirrel3.step("right");
+          if (this.game.squirrels[2].active && !this.paused) {
+            this.game.squirrels[2].step("right");
           }
           break;
 
@@ -103,7 +129,6 @@ class GameView {
     } else {
       switch (e.key) {
         case " ":
-          debugger;
           this.playing = true;
           this.start();
           break;
@@ -112,23 +137,6 @@ class GameView {
       }
     }
   }
-
-  bindKeyHandlers() {
-    document.addEventListener('keypress', this.menuButtons.bind(this))
-  }
-
-  animate() {
-    if (!this.paused && this.playing) {
-      if (this.squirrel.active) this.game.addObstacle(1);
-      if (this.squirrel2.active) this.game.addObstacle(2);
-      if (this.squirrel3.active) this.game.addObstacle(3);
-      this.game.moveObjects();
-      this.game.removeObjects();
-      this.game.draw(this.ctx);
-      requestAnimationFrame(this.animate.bind(this));
-    }
-  }
-
 
 }
 

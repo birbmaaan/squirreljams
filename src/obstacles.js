@@ -2,9 +2,9 @@ import Util from './util.js';
 
 const COLOR = 'blue';
 const POS = {
-  1: [515, 665],
-  2: [95, 245],
-  3: [935, 1085]}
+  0: [515, 665],
+  1: [95, 245],
+  2: [935, 1085]}
 
 
 class Obstacle {

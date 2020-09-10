@@ -1,22 +1,24 @@
 import Obstacle from './obstacles.js';
 import Squirrel from './squirrel.js';
+import Background from './background.js';
 
 class Game {
   constructor() {
     this.DIM_X = 1280;
     this.DIM_Y = 720;
     this.NUM_OBSTACLES = 30;
+    this.liveObstacles = [false, false, false]
     this.obstacles = {
+      0: [],
       1: [],
-      2: [],
-      3: []
-    }
+      2: []
+    };
+    this.trees = [(new Background(), new Background(), new Background())];
     this.squirrels = [];
 
     for (let i = 1; i <= 3; i++) {
       this.add(new Squirrel(i));
     }
-    this.add(new Obstacle(1));
   }
   
   add(object) {
@@ -40,7 +42,6 @@ class Game {
     const that = this;
     let length = this.obstacles[num].length;
     let minDistance = Math.floor((Math.random() * 200) + 200);
-    debugger;
     if (that.obstacles[num].length === 0 ||
         (length < that.NUM_OBSTACLES/3 &&
         that.obstacles[num][length - 1].pos[1] > minDistance)) {
@@ -79,10 +80,12 @@ class Game {
   detectCollision() {
     let dead = false;
     this.squirrels.forEach(squirrel => {
-      this.obstacles.forEach(tree => {
-        if (this.beenHit(squirrel, tree)) {
-          dead = true;
-        }
+      Object.keys(this.obstacles).forEach(num => {
+        this.obstacles[num].forEach(tree => {
+          if (this.beenHit(squirrel, tree)) {
+            dead = true;
+          }
+        })
       })
     })
     return dead;
