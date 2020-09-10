@@ -3,7 +3,17 @@ body {
   background-color: #333333;
 }
 
+canvas {
+  position: absolute;
+  top: 50px;
+  left: calc(50% - 640px);
+}
+
 #game-canvas {
+  z-index: 2;
+}
+
+#game-background {
+  z-index: 0;
   background-color: black;
-  margin: 50px auto;
 }

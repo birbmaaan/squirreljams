@@ -74,7 +74,8 @@ class Squirrel extends MovingObject {
     if (this.pos[0] < this.positions.farleft) {
       this.pos[0] = this.positions.farleft;
       cancelAnimationFrame(this.jumpAnimationLeft);
-      setTimeout(() => this.jumpBack(), 300);
+      this.jumpApex(0);
+      // setTimeout(() => this.jumpBack(), 300);
     }
   }
   
@@ -95,7 +96,8 @@ class Squirrel extends MovingObject {
     if (this.pos[0] > this.positions.farright) {
       this.pos[0] = this.positions.farright;
       cancelAnimationFrame(this.jumpAnimationRight);
-      setTimeout(() => this.jumpBack(), 300);
+      this.jumpApex(0);
+      // setTimeout(() => this.jumpBack(), 300);
     }
   }
   
@@ -108,6 +110,17 @@ class Squirrel extends MovingObject {
       this.moving = false;
       cancelAnimationFrame(this.moveAnimationRight);
     }
+  }
+
+  jumpApex(frames) {
+    if (frames < 12) {
+      frames += 1;
+      this.jumpAnimationApex = requestAnimationFrame(this.jumpApex.bind(this, frames));
+    } else {
+      cancelAnimationFrame(this.jumpAnimationApex);
+      this.jumpBack();
+    }
+
   }
   
   jumpBack() {

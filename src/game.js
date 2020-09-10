@@ -5,14 +5,20 @@ class Game {
   constructor() {
     this.DIM_X = 1280;
     this.DIM_Y = 720;
-    this.NUM_OBSTACLES = 10;
-    this.OBSTACLES = [];
+    this.NUM_OBSTACLES = 30;
+    this.obstacles = {
+      1: [],
+      2: [],
+      3: []
+    }
     this.squirrels = [];
+
+    this.add(new Obstacle(1));
   }
   
   add(object) {
     if (object instanceof Obstacle) {
-      this.OBSTACLES.push(object);
+      this.obstacles[object.num].push(object);
     } else if (object instanceof Squirrel) {
       this.squirrels.push(object);
     } else {
@@ -27,48 +33,61 @@ class Game {
     return squirrel;
   }
   
-  addObstacles(){
-    if (this.OBSTACLES.length < this.NUM_OBSTACLES) {
-      for (let i = this.OBSTACLES.length; i < this.NUM_OBSTACLES; i++) {
+  addObstacles(num){
+    if (this.obstacles.num.length < this.NUM_OBSTACLES) {
+      for (let i = this.obstacles.num.length; i < this.NUM_OBSTACLES; i++) {
         let pos = this.randomPosition();
         this.add(new Obstacle({pos, game: this}));
       }
     }
   }
   
-  addObstacle(obstacleNo) {
-    if (this.OBSTACLES.length < this.NUM_OBSTACLES) {
-      this.add(new Obstacle(obstacleNo));
+  addObstacle(num) {
+    const that = this;
+    let length = this.obstacles[num].length;
+    let minDistance = Math.floor((Math.random() * 200) + 200);
+    debugger;
+    if (that.obstacles[num].length === 0 ||
+        (length < that.NUM_OBSTACLES/3 &&
+        that.obstacles[num][length - 1].pos[1] > minDistance)) {
+      that.add(new Obstacle(num));
     }
   }
 
   draw(ctx) {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
-    this.OBSTACLES.forEach(tree => tree.draw(ctx)); 
+    Object.keys(this.obstacles).forEach(num => {
+      this.obstacles[num].forEach(tree => tree.draw(ctx)); 
+    });
     this.squirrels.forEach(squirrel => squirrel.draw(ctx));
   }
   
   moveObjects() {
-    this.OBSTACLES.forEach(tree => tree.move());
+    Object.keys(this.obstacles).forEach(num => {
+      this.obstacles[num].forEach(tree => tree.move());
+    })
   }
   
   removeObjects() {
-    let currentObstacles = [];
-    this.OBSTACLES.forEach(tree => {
-      if (tree.pos[1] < this.DIM_Y + tree.size[1]) {
-        currentObstacles.push(tree);
-      }
+    Object.keys(this.obstacles).forEach(num => {
+      let currentObstacles = [];
+      this.obstacles[num].forEach(tree => {
+        if (tree.pos[1] < this.DIM_Y + tree.size[1]) {
+          currentObstacles.push(tree);
+        }
+      })
+      this.obstacles[num] = currentObstacles;
     })
-    this.OBSTACLES = currentObstacles;
   }
 
   detectCollision() {
-    const squirrel = this.squirrels[0];
     let dead = false;
-    this.OBSTACLES.forEach(tree => {
-      if (this.beenHit(squirrel, tree)) {
-        dead = true;
-      }
+    this.squirrels.forEach(squirrel => {
+      this.obstacles.forEach(tree => {
+        if (this.beenHit(squirrel, tree)) {
+          dead = true;
+        }
+      })
     })
     return dead;
   }
@@ -81,7 +100,7 @@ class Game {
       return true;
     }
   }
-  
+
 }
 
 export default Game;
