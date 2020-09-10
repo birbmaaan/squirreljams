@@ -1,5 +1,6 @@
 import Obstacle from './obstacles.js';
 import Squirrel from './squirrel.js';
+import Treetrunk from './treetrunks.js';
 import Background from './background.js';
 
 class Game {
@@ -7,18 +8,19 @@ class Game {
     this.DIM_X = 1280;
     this.DIM_Y = 720;
     this.NUM_OBSTACLES = 30;
-    this.liveObstacles = [false, false, false]
+    this.liveObstacles = [false, false, false];
+    this.squirrels = [];
+    this.trees = [(new Treetrunk(), new Treetrunk(), new Treetrunk())];
+    this.background = new Background();
     this.obstacles = {
       0: [],
       1: [],
       2: []
     };
-    this.trees = [(new Background(), new Background(), new Background())];
-    this.squirrels = [];
 
     for (let i = 1; i <= 3; i++) {
       this.add(new Squirrel(i));
-    }
+    };
   }
   
   add(object) {
@@ -51,6 +53,8 @@ class Game {
 
   draw(ctx) {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
+    this.background.draw();
+    this.trees[0].draw();
     Object.keys(this.obstacles).forEach(num => {
       this.obstacles[num].forEach(tree => tree.draw(ctx)); 
     });

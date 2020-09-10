@@ -1,20 +1,17 @@
-
 class Background {
   constructor() {
-    debugger;
-    const gameLevel = document.getElementById("game-level");
-    this.ctx = gameLevel.getContext("2d");
-    this.treeImage = document.getElementById('tree-image');
+    const background = document.getElementById("game-background");
+    this.ctx = background.getContext('2d');
+    this.backgroundImage = document.getElementById('background-image');
     this.imgHeight = 0;
   }
-  
+
   draw() {
-    const scrollSpeed = 5;
-    debugger;
-    this.ctx.drawImage(this.treeImage, 485, this.imgHeight, 300, 1000);
-    this.ctx.drawImage(this.treeImage, 485, this.imgHeight - 1000, 300, 1000);
+    const scrollSpeed = 0.25;
+    this.ctx.drawImage(this.backgroundImage, 0, this.imgHeight, 1280, 720);
+    this.ctx.drawImage(this.backgroundImage, 0, this.imgHeight - 720, 1280, 720);
     this.imgHeight += scrollSpeed;
-    if (this.imgHeight === 1000) this.imgHeight = 0;
+    if (this.imgHeight === 720) this.imgHeight = 0;
   }
 }
 

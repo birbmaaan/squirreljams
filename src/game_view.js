@@ -1,6 +1,6 @@
 import Game from './game.js';
 import Menu from './menu.js';
-import Background from './background.js';
+import Treetrunks from './treetrunks.js';
 
 class GameView {
   constructor(game, ctx) {
@@ -71,7 +71,7 @@ class GameView {
       this.game.moveObjects();
       this.game.removeObjects();
       this.game.draw(this.ctx);
-      this.game.trees[0].draw();
+      // this.game.trees[0].draw();
       requestAnimationFrame(this.animate.bind(this));
     }
   }
