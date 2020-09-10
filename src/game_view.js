@@ -1,6 +1,5 @@
 import Game from './game.js';
 import Menu from './menu.js';
-import Treetrunks from './treetrunks.js';
 
 class GameView {
   constructor(game, ctx) {
@@ -9,17 +8,14 @@ class GameView {
     this.ctx = ctx;
     this.paused = false;
     this.playing = false;
+    this.startMenu = new Menu(ctx);
   }
 
   menu() { 
-    // const menu = new Menu();
-    console.log('this is the menu')
-    // menu.showText();
+    this.startMenu.draw();
   }
 
   start() {
-    debugger;
-    // Background.drawTrees();
     this.game.squirrels[0].active = true;
     this.timeOuts[3] = setTimeout(() => {
       this.game.liveObstacles[0] = true;
@@ -50,7 +46,27 @@ class GameView {
   clearScreen() {
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+    debugger;
     this.game.background.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+  }
+
+  animate() {
+    if (!this.paused && this.playing) {
+      if (this.game.detectCollision()) {
+        alert('you died');
+        this.restart();
+      }
+
+      for (let i = 0; i <= 2; i++) {
+        if (this.game.squirrels[i].active && this.game.liveObstacles[i]) {
+          this.game.addObstacle(i);
+        }
+      }
+      this.game.moveObjects();
+      this.game.removeObjects();
+      this.game.draw(this.ctx);
+      requestAnimationFrame(this.animate.bind(this));
+    }
   }
 
   clearCache() {
@@ -64,26 +80,6 @@ class GameView {
     this.game.liveObstacles.forEach(obstacle => { obstacle = false })
     this.playing = false;
     this.paused = false;
-  }
-
-  animate() {
-    if (!this.paused && this.playing) {
-      if (this.game.detectCollision()) {
-        alert('you died');
-        this.restart();
-      }
-
-      for (let i = 0; i <= 2; i++) {
-        if (this.game.squirrels[i].active && this.game.liveObstacles[i]) {
-          this.game.addObstacle(i);
-        } 
-      }
-      this.game.moveObjects();
-      this.game.removeObjects();
-      this.game.draw(this.ctx);
-      // this.game.trees[0].draw();
-      requestAnimationFrame(this.animate.bind(this));
-    }
   }
 
   bindKeyHandlers() {

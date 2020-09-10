@@ -25,6 +25,5 @@ img {
 
 #game-background {
   z-index: 0;
-  /* background-image: url('../assets/leaves.png'); */
-  background-size: ;
+  background-image: url('../assets/menu.png');
 }

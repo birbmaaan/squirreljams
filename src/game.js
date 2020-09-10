@@ -62,7 +62,6 @@ class Game {
     });
     for (let i = 0; i < 3; i++) {
       if (this.squirrels[i].active) {
-        debugger;
         this.squirrels[i].draw(ctx);
         this.trees[i].draw();
       };

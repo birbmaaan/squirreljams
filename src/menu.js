@@ -1,10 +1,13 @@
 class Menu {
-  constructor() {
-    this.text = "Press space bar to start a new game"
+  constructor(ctx) {
+    this.ctx = ctx;
+    this.menuImage = document.getElementById('menu-image');
   }
 
-  showText() {
-    // return <div>{this.text}</div>
+  draw() {
+    debugger;
+    this.ctx.drawImage(this.menuImage, 0, 0, 300, 720);
+    debugger;
   }
 }
 
