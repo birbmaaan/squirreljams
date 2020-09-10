@@ -2,15 +2,15 @@ import MovingObject from './moving_object.js';
 import Util from './util.js';
 
 const COLOR = 'orange';
-const POS = {1: [545, 600], 2: [125, 600], 3: [965, 600]};
+const POS = {0: [545, 600], 1: [125, 600], 2: [965, 600]};
 const SIZE = [40, 80]
 const SPEED = 10;
 const POSITIONS = {
-  farleft: [0, 420, 0, 840],
-  left: [0, 545, 125, 965],
-  middle: [0, 620, 200, 1040],
-  right: [0, 695, 275, 1115],
-  farright: [0, 820, 400, 1240],
+  farleft: [420, 0, 840],
+  left: [545, 125, 965],
+  middle: [620, 200, 1040],
+  right: [695, 275, 1115],
+  farright: [820, 400, 1240],
 }
 
 

@@ -42,7 +42,18 @@ class GameView {
   }
 
   restart() {
+    this.clearScreen();
+    this.clearCache();
+    this.menu();
+  }
+
+  clearScreen() {
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+    this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+    this.game.background.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+  }
+
+  clearCache() {
     Object.keys(this.timeOuts).forEach((timeout) => {
       clearTimeout(this.timeOuts[timeout]);
     })
@@ -50,10 +61,9 @@ class GameView {
     this.game.squirrels.forEach(squirrel => {
       squirrel.active = false;
     })
-    this.game.liveObstacles.forEach(obstacle => {obstacle = false})
+    this.game.liveObstacles.forEach(obstacle => { obstacle = false })
     this.playing = false;
     this.paused = false;
-    this.menu();
   }
 
   animate() {

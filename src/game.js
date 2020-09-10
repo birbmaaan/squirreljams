@@ -10,7 +10,8 @@ class Game {
     this.NUM_OBSTACLES = 30;
     this.liveObstacles = [false, false, false];
     this.squirrels = [];
-    this.trees = [(new Treetrunk(), new Treetrunk(), new Treetrunk())];
+    this.trees = [];
+    // [(new Treetrunk(0), new Treetrunk(1), new Treetrunk(2))];
     this.background = new Background();
     this.obstacles = {
       0: [],
@@ -18,8 +19,9 @@ class Game {
       2: []
     };
 
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 0; i <= 2; i++) {
       this.add(new Squirrel(i));
+      this.trees.push(new Treetrunk(i));
     };
   }
   
@@ -54,13 +56,17 @@ class Game {
   draw(ctx) {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     this.background.draw();
-    this.trees[0].draw();
+    // this.trees[0].draw();
     Object.keys(this.obstacles).forEach(num => {
       this.obstacles[num].forEach(tree => tree.draw(ctx)); 
     });
-    this.squirrels.forEach(squirrel => {
-      if (squirrel.active) squirrel.draw(ctx);
-    });
+    for (let i = 0; i < 3; i++) {
+      if (this.squirrels[i].active) {
+        debugger;
+        this.squirrels[i].draw(ctx);
+        this.trees[i].draw();
+      };
+    }
   }
   
   moveObjects() {
