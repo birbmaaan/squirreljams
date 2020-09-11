@@ -20,16 +20,23 @@ img {
 }
 
 #game-canvas {
-  z-index: 2;
+  z-index: 3;
 }
 
 #game-level {
-  z-index: 1;
+  z-index: 2;
   /* background-image: url('../assets/Trunk\ 04.png'); */
   background-size: 100%;
 }
 
 #game-background {
-  z-index: 0;
+  z-index: 1;
+  /* background-image: url('../assets/menu.png'); */
+}
+
+#menu-image {
+  z-index: 3;
   background-image: url('../assets/menu.png');
 }
+
+

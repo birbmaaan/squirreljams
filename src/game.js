@@ -11,7 +11,6 @@ class Game {
     this.liveObstacles = [false, false, false];
     this.squirrels = [];
     this.trees = [];
-    // [(new Treetrunk(0), new Treetrunk(1), new Treetrunk(2))];
     this.background = new Background();
     this.obstacles = {
       0: [],

@@ -12,7 +12,10 @@ class GameView {
   }
 
   menu() { 
-    this.startMenu.draw();
+    if (!this.playing) {
+      this.startMenu.draw();
+      requestAnimationFrame(this.menu.bind(this));
+    }
   }
 
   start() {
@@ -47,7 +50,8 @@ class GameView {
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     debugger;
-    this.game.background.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+    this.game.background.clear();
+    // this.game.background.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
   }
 
   animate() {
@@ -74,6 +78,7 @@ class GameView {
       clearTimeout(this.timeOuts[timeout]);
     })
     this.game = new Game();
+    this.game.background.clear();
     this.game.squirrels.forEach(squirrel => {
       squirrel.active = false;
     })
