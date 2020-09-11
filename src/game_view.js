@@ -3,8 +3,8 @@ import Menu from './menu.js';
 import SquirrelSprite from './sprites/squirrel_sprite';
 
 class GameView {
-  constructor(game, ctx) {
-    this.game = game;
+  constructor(ctx) {
+    this.game = new Game(ctx);
     this.timeOuts = {};
     this.ctx = ctx;
     this.paused = false;
@@ -83,7 +83,7 @@ class GameView {
     Object.keys(this.timeOuts).forEach((timeout) => {
       clearTimeout(this.timeOuts[timeout]);
     })
-    this.game = new Game();
+    this.game = new Game(this.ctx);
     this.game.background.clear();
     this.game.squirrels.forEach(squirrel => {
       squirrel.active = false;

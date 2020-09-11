@@ -1,4 +1,4 @@
-import Util from './util.js';
+import BranchSprite from "./sprites/branch_sprite";
 
 const COLOR = 'blue';
 const POS = {
@@ -8,12 +8,13 @@ const POS = {
 
 
 class Obstacle {
-  constructor(obstacleNo) {
+  constructor(obstacleNo, ctx) {
     this.speed = 5;
     this.num = obstacleNo;
     this.color = COLOR;
-    this.pos = this.randomPosition(obstacleNo)
-    this.size = [100, 40]
+    this.pos = this.randomPosition(obstacleNo);
+    this.size = [100, 40];
+    this.sprite = new BranchSprite(ctx, this.side);
   }
 
   move() {
@@ -24,15 +25,30 @@ class Obstacle {
   }
 
   randomPosition(obstacleNo) {
+    let side;
     let x = Math.random();
-    x = x > 0.5 ? POS[obstacleNo][1] : POS[obstacleNo][0];
-    let pos = [x, -70];
+    if (x > 0.5)  {
+      x = POS[obstacleNo][1];
+      side = 'Right';
+    } else {
+      x = POS[obstacleNo][0];
+      side = 'Left';
+    }
 
+    let size = Math.random();
+    size = size > 0.5 ? "big" : "small";
+    this.side = size + side;
+    let pos = [x, -70];
     return pos;
   }
 
 
   draw(ctx) {
+    // this.drawHitBox(ctx);
+    this.sprite.draw(this.pos[0], this.pos[1]);
+  }
+
+  drawHitBox(ctx) {
     ctx.beginPath();
     ctx.rect(this.pos[0], this.pos[1], this.size[0], this.size[1]);
     ctx.fillStyle = this.color;

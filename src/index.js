@@ -1,7 +1,9 @@
 import Game from './game.js';
 import GameView from './game_view.js'
 import SquirrelSprite from './sprites/squirrel_sprite';
+import BranchSprite from './sprites/branch_sprite';
 
+window.BranchSprite = BranchSprite;
 window.SquirrelSprite = SquirrelSprite;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,10 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ctx = canvas.getContext('2d')
   window.ctx = ctx;
 
-  const sprite = new SquirrelSprite(ctx);
-  const game = new Game(ctx);
-  const newGame = new GameView(game, ctx);
+  const newGame = new GameView(ctx);
   newGame.bindKeyHandlers();
-
   newGame.menu();
 })

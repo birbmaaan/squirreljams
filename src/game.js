@@ -4,7 +4,7 @@ import Treetrunk from './treetrunks.js';
 import Background from './background.js';
 
 class Game {
-  constructor() {
+  constructor(ctx) {
     this.DIM_X = 1280;
     this.DIM_Y = 720;
     this.NUM_OBSTACLES = 30;
@@ -20,7 +20,7 @@ class Game {
     this.frameCount = 0;
     this.currentLoopIndex = 0;
     this.sqrlCtx = this.getSquirrelCanvas();
-
+    this.ctx = ctx;
     for (let i = 0; i <= 2; i++) {
       this.add(new Squirrel(i, this.sqrlCtx));
       this.trees.push(new Treetrunk(i));
@@ -50,7 +50,7 @@ class Game {
     if (that.obstacles[num].length === 0 ||
         (length < that.NUM_OBSTACLES/3 &&
         that.obstacles[num][length - 1].pos[1] > minDistance)) {
-      that.add(new Obstacle(num));
+      that.add(new Obstacle(num, that.ctx));
     }
   }
 
