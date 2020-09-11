@@ -1,5 +1,6 @@
 import Game from './game.js';
 import Menu from './menu.js';
+import SquirrelSprite from './sprites/squirrel_sprite';
 
 class GameView {
   constructor(game, ctx) {
@@ -9,6 +10,12 @@ class GameView {
     this.paused = false;
     this.playing = false;
     this.startMenu = new Menu(ctx);
+  }
+
+  drawSprite() {
+    const sprite = new SquirrelSprite(this.ctx);
+    debugger;
+    sprite.draw();
   }
 
   menu() { 
@@ -49,7 +56,6 @@ class GameView {
   clearScreen() {
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
-    debugger;
     this.game.background.clear();
     // this.game.background.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
   }

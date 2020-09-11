@@ -1,6 +1,3 @@
-import MovingObject from './moving_object.js';
-import Util from './util.js';
-
 const COLOR = 'orange';
 const POS = {0: [545, 600], 1: [125, 600], 2: [965, 600]};
 const SIZE = [40, 80]
@@ -14,9 +11,8 @@ const POSITIONS = {
 }
 
 
-class Squirrel extends MovingObject {
+class Squirrel {
   constructor(squirrelNo) {
-    super();
     this.active = false;
     this.color = COLOR;
     this.pos = POS[squirrelNo];
@@ -30,7 +26,6 @@ class Squirrel extends MovingObject {
       right: POSITIONS.right[squirrelNo],
       farright: POSITIONS.farright[squirrelNo]
     }
-    Util.inherits(Squirrel, MovingObject);
   }
 
   draw(ctx) {
