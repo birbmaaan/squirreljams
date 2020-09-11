@@ -3,6 +3,8 @@ const BRANCHES = {
   'smallRight': [74, 3, 66, 26, 300, 120, 10, 35],
   'bigLeft': [3, 33, 66, 44, 300, 200, 200, 105],
   'bigRight': [74, 33, 66, 44, 300, 200, 5, 105],
+  'smallMiddle': [3, 81, 47, 18, 220, 60, 38, 10],
+  'bigMiddle': [3, 81, 47, 18, 220, 60, 38, 10],
 }
 
 class BranchSprite {

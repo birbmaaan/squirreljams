@@ -87,7 +87,7 @@ class Game {
     Object.keys(this.obstacles).forEach(num => {
       let currentObstacles = [];
       this.obstacles[num].forEach(tree => {
-        if (tree.pos[1] < this.DIM_Y + tree.size[1]) {
+        if (tree.pos[1] < 800) {
           currentObstacles.push(tree);
         }
       })

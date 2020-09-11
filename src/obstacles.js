@@ -2,9 +2,9 @@ import BranchSprite from "./sprites/branch_sprite";
 
 const COLOR = 'blue';
 const POS = {
-  0: [515, 665],
-  1: [95, 245],
-  2: [935, 1085]}
+  0: [515, 665, 565],
+  1: [95, 245, 145],
+  2: [935, 1085, 985]}
 
 
 class Obstacle {
@@ -12,8 +12,9 @@ class Obstacle {
     this.speed = 5;
     this.num = obstacleNo;
     this.color = COLOR;
-    this.pos = this.randomPosition(obstacleNo);
-    this.size = [100, 40];
+
+    this.setRandomBranch(obstacleNo);
+
     this.sprite = new BranchSprite(ctx, this.side);
   }
 
@@ -24,22 +25,27 @@ class Obstacle {
     this.pos = [position[0], position[1] + speed];
   }
 
-  randomPosition(obstacleNo) {
+  setRandomBranch(obstacleNo) {
     let side;
-    let x = Math.random();
-    if (x > 0.5)  {
-      x = POS[obstacleNo][1];
-      side = 'Right';
-    } else {
+    let x = Math.floor(Math.random() * 3);
+    if (x === 0)  {
       x = POS[obstacleNo][0];
       side = 'Left';
+      this.size = [100, 40];
+    } else if (x === 1) {
+      x = POS[obstacleNo][1];
+      side = 'Right';
+      this.size = [100, 40];
+    } else {
+      x = POS[obstacleNo][2];
+      side = 'Middle';
+      this.size = [150, 30];
     }
 
     let size = Math.random();
     size = size > 0.5 ? "big" : "small";
     this.side = size + side;
-    let pos = [x, -70];
-    return pos;
+    this.pos = [x, -70];
   }
 
 
