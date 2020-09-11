@@ -1,6 +1,12 @@
+@font-face {
+  font-family: 'titlefont';
+  src: url('../assets/titlefont.ttf');
+}
+
 body {
   display: flex;
   background-color: #333333;
+  font-family: 'titlefont';
 }
 
 canvas {
