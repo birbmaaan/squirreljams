@@ -1,6 +1,8 @@
+import SquirrelSprite from './sprites/squirrel_sprite';
+
 const COLOR = 'orange';
 const POS = {0: [545, 600], 1: [125, 600], 2: [965, 600]};
-const SIZE = [40, 80]
+const SIZE = [35, 60]
 const SPEED = 10;
 const POSITIONS = {
   farleft: [420, 0, 840],
@@ -12,7 +14,7 @@ const POSITIONS = {
 
 
 class Squirrel {
-  constructor(squirrelNo) {
+  constructor(squirrelNo, ctx) {
     this.active = false;
     this.color = COLOR;
     this.pos = POS[squirrelNo];
@@ -26,9 +28,15 @@ class Squirrel {
       right: POSITIONS.right[squirrelNo],
       farright: POSITIONS.farright[squirrelNo]
     }
+    this.sprite = new SquirrelSprite(ctx, squirrelNo);
   }
 
   draw(ctx) {
+    // this.drawHitBox(ctx);
+    this.sprite.step(this.pos[0], this.pos[1]);
+  }
+
+  drawHitBox(ctx) {
     ctx.beginPath();
     ctx.rect(this.pos[0], this.pos[1], this.size[0], this.size[1]);
     ctx.fillStyle = this.color;

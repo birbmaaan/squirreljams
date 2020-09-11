@@ -19,6 +19,10 @@ img {
   display: none;
 }
 
+#game-squirrels {
+  z-index: 3;
+}
+
 #game-canvas {
   z-index: 3;
 }

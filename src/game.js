@@ -17,11 +17,20 @@ class Game {
       1: [],
       2: []
     };
+    this.frameCount = 0;
+    this.currentLoopIndex = 0;
+    this.sqrlCtx = this.getSquirrelCanvas();
 
     for (let i = 0; i <= 2; i++) {
-      this.add(new Squirrel(i));
+      this.add(new Squirrel(i, this.sqrlCtx));
       this.trees.push(new Treetrunk(i));
     };
+  }
+
+  getSquirrelCanvas() {
+    const squirrelCanvas = document.getElementById('game-squirrels')
+    const ctx = squirrelCanvas.getContext('2d');
+    return ctx;
   }
   
   add(object) {
@@ -32,13 +41,6 @@ class Game {
     } else {
       throw new Error('unknown object');
     }
-  }
-  
-  addSquirrel(squirrelNo) {
-    const squirrel = new Squirrel(squirrelNo);
-    
-    this.add(squirrel);
-    return squirrel;
   }
   
   addObstacle(num) {
@@ -55,15 +57,23 @@ class Game {
   draw(ctx) {
     ctx.clearRect(0, 0, this.DIM_X, this.DIM_Y);
     this.background.draw();
-    // this.trees[0].draw();
     Object.keys(this.obstacles).forEach(num => {
       this.obstacles[num].forEach(tree => tree.draw(ctx)); 
     });
+
     for (let i = 0; i < 3; i++) {
-      if (this.squirrels[i].active) {
-        this.squirrels[i].draw(ctx);
-        this.trees[i].draw();
-      };
+      if (this.squirrels[i].active) this.trees[i].draw();
+    }
+
+    this.frameCount++;
+    if (this.frameCount === 5) {
+      this.sqrlCtx.clearRect(0, 560, 1280, 720);
+      for (let i = 0; i < 3; i++) {
+        if (this.squirrels[i].active) {
+          this.squirrels[i].draw(ctx);
+        };
+      }
+      this.frameCount = 0;
     }
   }
   

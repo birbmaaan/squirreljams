@@ -1,5 +1,3 @@
-import Squirrel from './squirrel.js';
-import Obstacle from './obstacles.js';
 import Game from './game.js';
 import GameView from './game_view.js'
 import SquirrelSprite from './sprites/squirrel_sprite';
@@ -13,9 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.ctx = ctx;
 
   const sprite = new SquirrelSprite(ctx);
-  const game = new Game();
+  const game = new Game(ctx);
   const newGame = new GameView(game, ctx);
   newGame.bindKeyHandlers();
 
-  // newGame.menu();
+  newGame.menu();
 })

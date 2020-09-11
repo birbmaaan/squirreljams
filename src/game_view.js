@@ -14,7 +14,7 @@ class GameView {
 
   drawSprite() {
     const sprite = new SquirrelSprite(this.ctx);
-    debugger;
+    // debugger;
     sprite.draw();
   }
 
@@ -57,7 +57,7 @@ class GameView {
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.background.clear();
-    // this.game.background.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+    this.game.sqrlCtx.clearRect(0, 560, this.game.DIM_X, this.game.DIM_Y);
   }
 
   animate() {
