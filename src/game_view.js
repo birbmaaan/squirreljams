@@ -1,5 +1,6 @@
 import Game from './game.js';
 import Menu from './menu.js';
+import Pause from './pause.js';
 import SquirrelSprite from './sprites/squirrel_sprite';
 
 class GameView {
@@ -9,7 +10,11 @@ class GameView {
     this.ctx = ctx;
     this.paused = false;
     this.playing = false;
+    this.activeSquirrels = 0;
     this.startMenu = new Menu(ctx);
+    this.pauseMenu = new Pause();
+
+    this.bindKeyHandlers();
   }
 
   drawSprite() {
@@ -27,6 +32,7 @@ class GameView {
 
   start() {
     this.game.squirrels[0].active = true;
+    this.activeSquirrels++;
     this.timeOuts[3] = setTimeout(() => {
       this.game.liveObstacles[0] = true;
     }, 2500);
@@ -34,6 +40,7 @@ class GameView {
 
     this.timeOuts[1] = setTimeout(() => {
       this.game.squirrels[1].active = true;
+      this.activeSquirrels++;
       this.timeOuts[4] = setTimeout(() => {
         this.game.liveObstacles[1] = true;
       }, 2500);
@@ -41,6 +48,7 @@ class GameView {
 
     this.timeOuts[2] = setTimeout(() => {
       this.game.squirrels[2].active = true;
+      this.activeSquirrels++;
       this.timeOuts[5] = setTimeout(() => {
         this.game.liveObstacles[2] = true;
       }, 2500);
@@ -91,21 +99,24 @@ class GameView {
     this.game.liveObstacles.forEach(obstacle => { obstacle = false })
     this.playing = false;
     this.paused = false;
+    this.activeSquirrels = 0;
   }
 
   bindKeyHandlers() {
-    document.addEventListener('keypress', this.menuButtons.bind(this))
+    document.addEventListener('keypress', this.controlButtons.bind(this))
   }
 
-  menuButtons(e) {
+  controlButtons(e) {
     if (this.playing) {
       switch (e.key) {
         case " ":
           if (this.paused) {
             this.paused = false;
+            this.pauseMenu.ctx.clearRect(0, 0, 1280, 720);
             this.animate();
           } else {
             this.paused = true;
+            this.pauseMenu.draw(this.activeSquirrels);
           }
           break;
      

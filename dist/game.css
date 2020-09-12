@@ -19,6 +19,10 @@ img {
   display: none;
 }
 
+#game-pause {
+  z-index: 4;
+}
+
 #game-squirrels {
   z-index: 3;
 }
