@@ -271,7 +271,9 @@ class Game {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game.js */ "./src/game.js");
 /* harmony import */ var _menu_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu.js */ "./src/menu.js");
-/* harmony import */ var _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sprites/squirrel_sprite */ "./src/sprites/squirrel_sprite.js");
+/* harmony import */ var _pause_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pause.js */ "./src/pause.js");
+/* harmony import */ var _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sprites/squirrel_sprite */ "./src/sprites/squirrel_sprite.js");
+
 
 
 
@@ -283,11 +285,15 @@ class GameView {
     this.ctx = ctx;
     this.paused = false;
     this.playing = false;
+    this.activeSquirrels = 0;
     this.startMenu = new _menu_js__WEBPACK_IMPORTED_MODULE_1__["default"](ctx);
+    this.pauseMenu = new _pause_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+
+    this.bindKeyHandlers();
   }
 
   drawSprite() {
-    const sprite = new _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_2__["default"](this.ctx);
+    const sprite = new _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_3__["default"](this.ctx);
     // debugger;
     sprite.draw();
   }
@@ -301,6 +307,7 @@ class GameView {
 
   start() {
     this.game.squirrels[0].active = true;
+    this.activeSquirrels++;
     this.timeOuts[3] = setTimeout(() => {
       this.game.liveObstacles[0] = true;
     }, 2500);
@@ -308,6 +315,7 @@ class GameView {
 
     this.timeOuts[1] = setTimeout(() => {
       this.game.squirrels[1].active = true;
+      this.activeSquirrels++;
       this.timeOuts[4] = setTimeout(() => {
         this.game.liveObstacles[1] = true;
       }, 2500);
@@ -315,6 +323,7 @@ class GameView {
 
     this.timeOuts[2] = setTimeout(() => {
       this.game.squirrels[2].active = true;
+      this.activeSquirrels++;
       this.timeOuts[5] = setTimeout(() => {
         this.game.liveObstacles[2] = true;
       }, 2500);
@@ -365,21 +374,24 @@ class GameView {
     this.game.liveObstacles.forEach(obstacle => { obstacle = false })
     this.playing = false;
     this.paused = false;
+    this.activeSquirrels = 0;
   }
 
   bindKeyHandlers() {
-    document.addEventListener('keypress', this.menuButtons.bind(this))
+    document.addEventListener('keypress', this.controlButtons.bind(this))
   }
 
-  menuButtons(e) {
+  controlButtons(e) {
     if (this.playing) {
       switch (e.key) {
         case " ":
           if (this.paused) {
             this.paused = false;
+            this.pauseMenu.ctx.clearRect(0, 0, 1280, 720);
             this.animate();
           } else {
             this.paused = true;
+            this.pauseMenu.draw(this.activeSquirrels);
           }
           break;
      
@@ -444,17 +456,18 @@ class GameView {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _game_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game.js */ "./src/game.js");
-/* harmony import */ var _game_view_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./game_view.js */ "./src/game_view.js");
-/* harmony import */ var _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sprites/squirrel_sprite */ "./src/sprites/squirrel_sprite.js");
-/* harmony import */ var _sprites_branch_sprite__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sprites/branch_sprite */ "./src/sprites/branch_sprite.js");
+/* harmony import */ var _game_view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_view.js */ "./src/game_view.js");
+/* harmony import */ var _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sprites/squirrel_sprite */ "./src/sprites/squirrel_sprite.js");
+/* harmony import */ var _sprites_branch_sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sprites/branch_sprite */ "./src/sprites/branch_sprite.js");
+/* harmony import */ var _pause__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pause */ "./src/pause.js");
 
 
 
 
 
-window.BranchSprite = _sprites_branch_sprite__WEBPACK_IMPORTED_MODULE_3__["default"];
-window.SquirrelSprite = _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_2__["default"];
+window.BranchSprite = _sprites_branch_sprite__WEBPACK_IMPORTED_MODULE_2__["default"];
+window.SquirrelSprite = _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_1__["default"];
+window.Pause = _pause__WEBPACK_IMPORTED_MODULE_3__["default"];
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('game-canvas');
@@ -462,8 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ctx = canvas.getContext('2d')
   window.ctx = ctx;
 
-  const newGame = new _game_view_js__WEBPACK_IMPORTED_MODULE_1__["default"](ctx);
-  newGame.bindKeyHandlers();
+  const newGame = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
   newGame.menu();
 })
 
@@ -498,7 +510,7 @@ class Menu {
     this.ctx.fillText("Squirrel jamS", 640, 300);
 
     this.ctx.font = 'bold 35px titlefont';
-    this.ctx.fillText("press space to start", 640, 400)
+    this.ctx.fillText("press space to start & pause", 640, 400)
   }
 }
 
@@ -587,6 +599,52 @@ class Obstacle {
 
 /***/ }),
 
+/***/ "./src/pause.js":
+/*!**********************!*\
+  !*** ./src/pause.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class Pause {
+  constructor() {
+    const pauseCanvas = document.getElementById('game-pause');
+    this.ctx = pauseCanvas.getContext('2d');
+  }
+
+  draw(active) {
+    debugger;
+    this.ctx.beginPath();
+    this.ctx.fillStyle = '#333333';
+    this.ctx.fillRect(340, 100, 600, 420);
+    this.ctx.stroke();
+
+    this.ctx.fillStyle = "white";
+    this.ctx.font = 'bold 30px titlefont';
+    this.ctx.textAlign = 'center';
+    if (active === 1) {
+      this.ctx.fillText('~ Avoid the branches! ~', 640, 140);
+      this.ctx.fillText('press d and f to move left and right', 640, 240);
+      this.ctx.fillText('you can even jump off the tree!', 640, 300);
+    } else {
+      this.ctx.fillText('~ Controls ~', 640, 140);
+
+      this.ctx.fillText('Left Squirrel: a s', 640, 240);
+      this.ctx.fillText('Middle Squirrel: d f', 640, 300);
+      if (active === 3) {
+        this.ctx.fillText('Right Squirrel: j k', 640, 360);
+      }
+    }
+    this.ctx.fillText("press space to continue", 640, 500);
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Pause);
+
+/***/ }),
+
 /***/ "./src/sprites/branch_sprite.js":
 /*!**************************************!*\
   !*** ./src/sprites/branch_sprite.js ***!
@@ -617,7 +675,6 @@ class BranchSprite {
   }
 
   draw(canvasX, canvasY) {
-    debugger;
     const {width, height} = this;
     this.ctx.drawImage(
       this.spriteSheet, 

@@ -19,7 +19,6 @@ class BranchSprite {
   }
 
   draw(canvasX, canvasY) {
-    debugger;
     const {width, height} = this;
     this.ctx.drawImage(
       this.spriteSheet, 
