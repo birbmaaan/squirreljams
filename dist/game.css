@@ -6,7 +6,7 @@
 body {
   display: flex;
   background-color: #333333;
-  font-family: 'titlefont';
+  /* font-family: 'titlefont'; */
 }
 
 canvas {
@@ -35,7 +35,7 @@ img {
 
 #game-background {
   z-index: 1;
-  /* background-image: url('../assets/menu.png'); */
+  background-image: url('../assets/background3.png');
 }
 
 #menu-image {
