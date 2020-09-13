@@ -140,10 +140,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Game {
-  constructor(ctx) {
+  constructor(ctx, paused) {
     this.DIM_X = 1280;
     this.DIM_Y = 720;
     this.NUM_OBSTACLES = 30;
+    this.paused = paused;
+
     this.liveObstacles = [false, false, false];
     this.squirrels = [];
     this.trees = [];
@@ -158,7 +160,7 @@ class Game {
     this.sqrlCtx = this.getSquirrelCanvas();
     this.ctx = ctx;
     for (let i = 0; i <= 2; i++) {
-      this.add(new _squirrel_js__WEBPACK_IMPORTED_MODULE_1__["default"](i, this.sqrlCtx));
+      this.add(new _squirrel_js__WEBPACK_IMPORTED_MODULE_1__["default"](i, this.sqrlCtx, paused));
       this.trees.push(new _treetrunks_js__WEBPACK_IMPORTED_MODULE_2__["default"](i));
     };
   }
@@ -280,9 +282,9 @@ __webpack_require__.r(__webpack_exports__);
 
 class GameView {
   constructor(ctx) {
-    this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
-    this.ctx = ctx;
     this.paused = false;
+    this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx, this.paused);
+    this.ctx = ctx;
     this.playing = false;
     this.activeSquirrels = 0;
     this.startMenu = new _menu_js__WEBPACK_IMPORTED_MODULE_1__["default"](ctx);
@@ -766,7 +768,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const COLOR = 'orange';
-const POS = {0: [545, 600], 1: [125, 600], 2: [965, 600]};
+const POS = { 0: [545, 600], 1: [125, 600], 2: [965, 600] };
 const SIZE = [35, 60]
 const SPEED = 10;
 const POSITIONS = {
@@ -785,7 +787,7 @@ class Squirrel {
     this.pos = POS[squirrelNo];
     this.speed = SPEED;
     this.moving = false;
-    this.size = SIZE; 
+    this.size = SIZE;
     this.positions = {
       farleft: POSITIONS.farleft[squirrelNo],
       left: POSITIONS.left[squirrelNo],
@@ -828,7 +830,7 @@ class Squirrel {
       this.moveLeft();
     }
   }
-  
+
   rightMovement() {
     if (this.pos[0] === this.positions.right) {
       this.jumpRight();
@@ -847,18 +849,18 @@ class Squirrel {
       // setTimeout(() => this.jumpBack(), 300);
     }
   }
-  
+
   moveLeft() {
     this.pos[0] -= 7
     this.moveAnimationLeft = requestAnimationFrame(this.moveLeft.bind(this))
-    
+
     if (this.pos[0] <= this.positions.left) {
       this.pos[0] = this.positions.left;
       this.moving = false;
       cancelAnimationFrame(this.moveAnimationLeft);
     }
   }
-  
+
   jumpRight() {
     this.pos[0] += 7
     this.jumpAnimationRight = requestAnimationFrame(this.jumpRight.bind(this))
@@ -869,7 +871,7 @@ class Squirrel {
       // setTimeout(() => this.jumpBack(), 300);
     }
   }
-  
+
   moveRight() {
     this.pos[0] += 7
     this.moveAnimationRight = requestAnimationFrame(this.moveRight.bind(this))
@@ -891,7 +893,7 @@ class Squirrel {
     }
 
   }
-  
+
   jumpBack() {
     let distance;
     let location;
@@ -901,19 +903,19 @@ class Squirrel {
     } else {
       distance = -7;
       location = this.positions.right;
-    } 
+    }
 
     this.pos[0] += distance;
     this.jumpAnimationBack = requestAnimationFrame(this.jumpBack.bind(this))
-    if ((distance === -7 && this.pos[0] <= this.positions.right) || 
-        (distance === 7 && this.pos[0] >= this.positions.left)) {
+    if ((distance === -7 && this.pos[0] <= this.positions.right) ||
+      (distance === 7 && this.pos[0] >= this.positions.left)) {
       this.pos[0] = location;
       this.moving = false;
       cancelAnimationFrame(this.jumpAnimationBack);
     }
   }
 }
-  
+
 /* harmony default export */ __webpack_exports__["default"] = (Squirrel);
 
 /***/ }),

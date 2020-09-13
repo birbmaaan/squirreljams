@@ -5,9 +5,9 @@ import SquirrelSprite from './sprites/squirrel_sprite';
 
 class GameView {
   constructor(ctx) {
-    this.game = new Game(ctx);
-    this.ctx = ctx;
     this.paused = false;
+    this.game = new Game(ctx, this.paused);
+    this.ctx = ctx;
     this.playing = false;
     this.activeSquirrels = 0;
     this.startMenu = new Menu(ctx);
