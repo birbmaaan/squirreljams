@@ -474,7 +474,6 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("It's working! It's working!");
   const ctx = canvas.getContext('2d')
   window.ctx = ctx;
-
   const newGame = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
   newGame.menu();
 })
@@ -532,9 +531,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const COLOR = 'blue';
 const POS = {
-  0: [515, 665, 565],
-  1: [95, 245, 145],
-  2: [935, 1085, 985]}
+  0: [540, 665, 565],
+  1: [120, 245, 145],
+  2: [960, 1085, 985]}
 
 
 class Obstacle {
@@ -561,11 +560,11 @@ class Obstacle {
     if (x === 0)  {
       x = POS[obstacleNo][0];
       side = 'Left';
-      this.size = [100, 40];
+      this.size = [80, 30];
     } else if (x === 1) {
       x = POS[obstacleNo][1];
       side = 'Right';
-      this.size = [100, 40];
+      this.size = [80, 30];
     } else {
       x = POS[obstacleNo][2];
       side = 'Middle';
@@ -580,7 +579,7 @@ class Obstacle {
 
 
   draw(ctx) {
-    // this.drawHitBox(ctx);
+    this.drawHitBox(ctx);
     this.sprite.draw(this.pos[0], this.pos[1]);
   }
 
@@ -655,10 +654,10 @@ class Pause {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 const BRANCHES = {
-  'smallLeft': [3, 3, 67, 26, 300, 120, 190, 35],
-  'smallRight': [74, 3, 66, 26, 300, 120, 10, 35],
-  'bigLeft': [3, 33, 66, 44, 300, 200, 200, 105],
-  'bigRight': [74, 33, 66, 44, 300, 200, 5, 105],
+  'smallLeft': [3, 3, 67, 26, 300, 120, 190, 40],
+  'smallRight': [74, 3, 66, 26, 300, 120, 10, 40],
+  'bigLeft': [3, 33, 66, 44, 300, 200, 200, 115],
+  'bigRight': [74, 33, 66, 44, 300, 200, 5, 115],
   'smallMiddle': [3, 81, 47, 18, 220, 60, 38, 10],
   'bigMiddle': [3, 81, 47, 18, 220, 60, 38, 10],
 }

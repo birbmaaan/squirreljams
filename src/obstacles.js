@@ -2,9 +2,9 @@ import BranchSprite from "./sprites/branch_sprite";
 
 const COLOR = 'blue';
 const POS = {
-  0: [515, 665, 565],
-  1: [95, 245, 145],
-  2: [935, 1085, 985]}
+  0: [540, 665, 565],
+  1: [120, 245, 145],
+  2: [960, 1085, 985]}
 
 
 class Obstacle {
@@ -31,11 +31,11 @@ class Obstacle {
     if (x === 0)  {
       x = POS[obstacleNo][0];
       side = 'Left';
-      this.size = [100, 40];
+      this.size = [80, 30];
     } else if (x === 1) {
       x = POS[obstacleNo][1];
       side = 'Right';
-      this.size = [100, 40];
+      this.size = [80, 30];
     } else {
       x = POS[obstacleNo][2];
       side = 'Middle';
@@ -50,7 +50,7 @@ class Obstacle {
 
 
   draw(ctx) {
-    // this.drawHitBox(ctx);
+    this.drawHitBox(ctx);
     this.sprite.draw(this.pos[0], this.pos[1]);
   }
 

@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("It's working! It's working!");
   const ctx = canvas.getContext('2d')
   window.ctx = ctx;
-
   const newGame = new GameView(ctx);
   newGame.menu();
 })
