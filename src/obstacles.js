@@ -50,7 +50,7 @@ class Obstacle {
 
 
   draw(ctx) {
-    this.drawHitBox(ctx);
+    // this.drawHitBox(ctx);
     this.sprite.draw(this.pos[0], this.pos[1]);
   }
 

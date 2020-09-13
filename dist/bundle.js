@@ -281,20 +281,18 @@ __webpack_require__.r(__webpack_exports__);
 class GameView {
   constructor(ctx) {
     this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
-    this.timeOuts = {};
     this.ctx = ctx;
     this.paused = false;
     this.playing = false;
     this.activeSquirrels = 0;
     this.startMenu = new _menu_js__WEBPACK_IMPORTED_MODULE_1__["default"](ctx);
     this.pauseMenu = new _pause_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
-
+    this.frames = 0;
     this.bindKeyHandlers();
   }
 
   drawSprite() {
     const sprite = new _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_3__["default"](this.ctx);
-    // debugger;
     sprite.draw();
   }
 
@@ -308,26 +306,7 @@ class GameView {
   start() {
     this.game.squirrels[0].active = true;
     this.activeSquirrels++;
-    this.timeOuts[3] = setTimeout(() => {
-      this.game.liveObstacles[0] = true;
-    }, 2500);
     this.animate();
-
-    this.timeOuts[1] = setTimeout(() => {
-      this.game.squirrels[1].active = true;
-      this.activeSquirrels++;
-      this.timeOuts[4] = setTimeout(() => {
-        this.game.liveObstacles[1] = true;
-      }, 2500);
-    }, 10000);
-
-    this.timeOuts[2] = setTimeout(() => {
-      this.game.squirrels[2].active = true;
-      this.activeSquirrels++;
-      this.timeOuts[5] = setTimeout(() => {
-        this.game.liveObstacles[2] = true;
-      }, 2500);
-    }, 20000);
   }
 
   restart() {
@@ -341,6 +320,19 @@ class GameView {
     this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.background.clear();
     this.game.sqrlCtx.clearRect(0, 560, this.game.DIM_X, this.game.DIM_Y);
+  }
+
+  clearCache() {
+    this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx);
+    this.game.background.clear();
+    this.game.squirrels.forEach(squirrel => {
+      squirrel.active = false;
+    })
+    this.game.liveObstacles.forEach(obstacle => { obstacle = false })
+    this.playing = false;
+    this.paused = false;
+    this.activeSquirrels = 0;
+    this.score = 0;
   }
 
   animate() {
@@ -358,23 +350,42 @@ class GameView {
       this.game.moveObjects();
       this.game.removeObjects();
       this.game.draw(this.ctx);
+      this.drawScore();
+      if (this.frames <= 1350) this.checkActives();
+      this.frames++;
       requestAnimationFrame(this.animate.bind(this));
+
     }
   }
 
-  clearCache() {
-    Object.keys(this.timeOuts).forEach((timeout) => {
-      clearTimeout(this.timeOuts[timeout]);
-    })
-    this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx);
-    this.game.background.clear();
-    this.game.squirrels.forEach(squirrel => {
-      squirrel.active = false;
-    })
-    this.game.liveObstacles.forEach(obstacle => { obstacle = false })
-    this.playing = false;
-    this.paused = false;
-    this.activeSquirrels = 0;
+  checkActives() {
+    switch (this.frames) {
+      case 600:
+        this.game.squirrels[1].active = true;
+        this.activeSquirrels++;
+        break;
+      case 1200:
+        this.game.squirrels[2].active = true;
+        this.activeSquirrels++;
+        break;
+      case 150:
+        this.game.liveObstacles[0] = true;
+        break;
+      case 750:
+        this.game.liveObstacles[1] = true;
+        break;
+      case 1350:
+        this.game.liveObstacles[2] = true;
+      default:
+        break;
+    }
+  }
+
+  drawScore() {
+    this.ctx.fillStyle = 'white';
+    this.ctx.textAlign = 'left';
+    const currentScore = Math.floor(this.frames / 60);
+    this.ctx.fillText(`distance: ${currentScore}`, 80, 40);
   }
 
   bindKeyHandlers() {
@@ -579,7 +590,7 @@ class Obstacle {
 
 
   draw(ctx) {
-    this.drawHitBox(ctx);
+    // this.drawHitBox(ctx);
     this.sprite.draw(this.pos[0], this.pos[1]);
   }
 
@@ -611,10 +622,10 @@ class Pause {
   constructor() {
     const pauseCanvas = document.getElementById('game-pause');
     this.ctx = pauseCanvas.getContext('2d');
+    this.score = 0;
   }
 
   draw(active) {
-    debugger;
     this.ctx.beginPath();
     this.ctx.fillStyle = '#333333';
     this.ctx.fillRect(340, 100, 600, 420);
@@ -626,7 +637,9 @@ class Pause {
     if (active === 1) {
       this.ctx.fillText('~ Avoid the branches! ~', 640, 140);
       this.ctx.fillText('press d and f to move left and right', 640, 240);
-      this.ctx.fillText('you can even jump off the tree!', 640, 300);
+      this.ctx.fillText('move all the way to one side', 640, 300);
+      this.ctx.fillText('to jump off the tree!', 640, 360);
+
     } else {
       this.ctx.fillText('~ Controls ~', 640, 140);
 
@@ -638,6 +651,7 @@ class Pause {
     }
     this.ctx.fillText("press space to continue", 640, 500);
   }
+
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Pause);

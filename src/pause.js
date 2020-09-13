@@ -2,10 +2,10 @@ class Pause {
   constructor() {
     const pauseCanvas = document.getElementById('game-pause');
     this.ctx = pauseCanvas.getContext('2d');
+    this.score = 0;
   }
 
   draw(active) {
-    debugger;
     this.ctx.beginPath();
     this.ctx.fillStyle = '#333333';
     this.ctx.fillRect(340, 100, 600, 420);
@@ -17,7 +17,9 @@ class Pause {
     if (active === 1) {
       this.ctx.fillText('~ Avoid the branches! ~', 640, 140);
       this.ctx.fillText('press d and f to move left and right', 640, 240);
-      this.ctx.fillText('you can even jump off the tree!', 640, 300);
+      this.ctx.fillText('move all the way to one side', 640, 300);
+      this.ctx.fillText('to jump off the tree!', 640, 360);
+
     } else {
       this.ctx.fillText('~ Controls ~', 640, 140);
 
@@ -29,6 +31,7 @@ class Pause {
     }
     this.ctx.fillText("press space to continue", 640, 500);
   }
+
 }
 
 export default Pause;

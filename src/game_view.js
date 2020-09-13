@@ -6,20 +6,18 @@ import SquirrelSprite from './sprites/squirrel_sprite';
 class GameView {
   constructor(ctx) {
     this.game = new Game(ctx);
-    this.timeOuts = {};
     this.ctx = ctx;
     this.paused = false;
     this.playing = false;
     this.activeSquirrels = 0;
     this.startMenu = new Menu(ctx);
     this.pauseMenu = new Pause();
-
+    this.frames = 0;
     this.bindKeyHandlers();
   }
 
   drawSprite() {
     const sprite = new SquirrelSprite(this.ctx);
-    // debugger;
     sprite.draw();
   }
 
@@ -33,26 +31,7 @@ class GameView {
   start() {
     this.game.squirrels[0].active = true;
     this.activeSquirrels++;
-    this.timeOuts[3] = setTimeout(() => {
-      this.game.liveObstacles[0] = true;
-    }, 2500);
     this.animate();
-
-    this.timeOuts[1] = setTimeout(() => {
-      this.game.squirrels[1].active = true;
-      this.activeSquirrels++;
-      this.timeOuts[4] = setTimeout(() => {
-        this.game.liveObstacles[1] = true;
-      }, 2500);
-    }, 10000);
-
-    this.timeOuts[2] = setTimeout(() => {
-      this.game.squirrels[2].active = true;
-      this.activeSquirrels++;
-      this.timeOuts[5] = setTimeout(() => {
-        this.game.liveObstacles[2] = true;
-      }, 2500);
-    }, 20000);
   }
 
   restart() {
@@ -66,6 +45,19 @@ class GameView {
     this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.background.clear();
     this.game.sqrlCtx.clearRect(0, 560, this.game.DIM_X, this.game.DIM_Y);
+  }
+
+  clearCache() {
+    this.game = new Game(this.ctx);
+    this.game.background.clear();
+    this.game.squirrels.forEach(squirrel => {
+      squirrel.active = false;
+    })
+    this.game.liveObstacles.forEach(obstacle => { obstacle = false })
+    this.playing = false;
+    this.paused = false;
+    this.activeSquirrels = 0;
+    this.score = 0;
   }
 
   animate() {
@@ -83,23 +75,42 @@ class GameView {
       this.game.moveObjects();
       this.game.removeObjects();
       this.game.draw(this.ctx);
+      this.drawScore();
+      if (this.frames <= 1350) this.checkActives();
+      this.frames++;
       requestAnimationFrame(this.animate.bind(this));
+
     }
   }
 
-  clearCache() {
-    Object.keys(this.timeOuts).forEach((timeout) => {
-      clearTimeout(this.timeOuts[timeout]);
-    })
-    this.game = new Game(this.ctx);
-    this.game.background.clear();
-    this.game.squirrels.forEach(squirrel => {
-      squirrel.active = false;
-    })
-    this.game.liveObstacles.forEach(obstacle => { obstacle = false })
-    this.playing = false;
-    this.paused = false;
-    this.activeSquirrels = 0;
+  checkActives() {
+    switch (this.frames) {
+      case 600:
+        this.game.squirrels[1].active = true;
+        this.activeSquirrels++;
+        break;
+      case 1200:
+        this.game.squirrels[2].active = true;
+        this.activeSquirrels++;
+        break;
+      case 150:
+        this.game.liveObstacles[0] = true;
+        break;
+      case 750:
+        this.game.liveObstacles[1] = true;
+        break;
+      case 1350:
+        this.game.liveObstacles[2] = true;
+      default:
+        break;
+    }
+  }
+
+  drawScore() {
+    this.ctx.fillStyle = 'white';
+    this.ctx.textAlign = 'left';
+    const currentScore = Math.floor(this.frames / 60);
+    this.ctx.fillText(`distance: ${currentScore}`, 80, 40);
   }
 
   bindKeyHandlers() {
