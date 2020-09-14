@@ -67,6 +67,7 @@ class GameView {
     debugger;
     this.clearScreen();
     this.clearCache();
+    this.boop.stop();
     this.menuMusic.restart();
     this.menu();
   }

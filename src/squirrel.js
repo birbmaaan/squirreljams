@@ -20,6 +20,7 @@ class Squirrel {
     this.pos = POS[squirrelNo];
     this.speed = SPEED;
     this.moving = false;
+    this.jumping = null;
     this.size = SIZE;
     this.positions = {
       farleft: POSITIONS.farleft[squirrelNo],
@@ -33,7 +34,11 @@ class Squirrel {
 
   draw(ctx) {
     // this.drawHitBox(ctx);
-    this.sprite.step(this.pos[0], this.pos[1]);
+    if (!this.jumping) {
+      this.sprite.step(this.pos[0], this.pos[1]);
+    } else {
+      this.sprite.jump(this.pos[0], this.pos[1], this.jumping);
+    }
   }
 
   drawHitBox(ctx) {
@@ -76,10 +81,10 @@ class Squirrel {
     this.pos[0] -= 7
     this.jumpAnimationLeft = requestAnimationFrame(this.jumpLeft.bind(this))
     if (this.pos[0] < this.positions.farleft) {
+      this.jumping = 'left';
       this.pos[0] = this.positions.farleft;
       cancelAnimationFrame(this.jumpAnimationLeft);
       this.jumpApex(0);
-      // setTimeout(() => this.jumpBack(), 300);
     }
   }
 
@@ -98,10 +103,10 @@ class Squirrel {
     this.pos[0] += 7
     this.jumpAnimationRight = requestAnimationFrame(this.jumpRight.bind(this))
     if (this.pos[0] > this.positions.farright) {
+      this.jumping = 'right';
       this.pos[0] = this.positions.farright;
       cancelAnimationFrame(this.jumpAnimationRight);
       this.jumpApex(0);
-      // setTimeout(() => this.jumpBack(), 300);
     }
   }
 
@@ -144,6 +149,7 @@ class Squirrel {
       (distance === 7 && this.pos[0] >= this.positions.left)) {
       this.pos[0] = location;
       this.moving = false;
+      this.jumping = null;
       cancelAnimationFrame(this.jumpAnimationBack);
     }
   }
