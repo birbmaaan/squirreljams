@@ -274,9 +274,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game.js */ "./src/game.js");
 /* harmony import */ var _menu_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu.js */ "./src/menu.js");
 /* harmony import */ var _pause_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pause.js */ "./src/pause.js");
-/* harmony import */ var _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sprites/squirrel_sprite */ "./src/sprites/squirrel_sprite.js");
-/* harmony import */ var _sound__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./sound */ "./src/sound.js");
-
+/* harmony import */ var _sound__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sound */ "./src/sound.js");
 
 
 
@@ -296,10 +294,14 @@ class GameView {
     this.muted = true;
     this.firstClick = 0;
 
-    this.gameMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/levelmusic.wav");
-    this.menuMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/menu.wav");
-    this.beep = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/beep.wav", "sfx");
-    this.boop = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]('../assets/dead.wav', "sfx");
+    // this.gameMusic = new Sound("../assets/levelmusic.wav");
+    // this.menuMusic = new Sound("../assets/menu.wav");
+    // this.beep = new Sound("../assets/beep.wav", "sfx");
+    // this.boop = new Sound('../assets/dead.wav', "sfx");
+    this.gameMusic = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]("game-music");
+    this.menuMusic = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]("menu-music");
+    this.beep = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]("beep-music", "sfx");
+    this.boop = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]('lose-music', "sfx");
     this.muteButton = document.getElementById('mute-button');
 
     this.muteButton.addEventListener('click', this.muteSound.bind(this));
@@ -332,11 +334,6 @@ class GameView {
       }
       sounds.forEach(sound => sound.muted = this.muted);
     }
-  }
-
-  drawSprite() {
-    const sprite = new _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_3__["default"](this.ctx);
-    sprite.draw();
   }
 
   menu() { 
@@ -397,7 +394,6 @@ class GameView {
   animate() {
     if (!this.paused && this.playing) {
       if (this.game.detectCollision()) {
-        // alert('you died');
         this.gameOver();
       }
 
@@ -748,20 +744,27 @@ class Pause {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 class Sound {
-  constructor(src, sfx) {
+  constructor(name, sfx) {
     // this.sound = document.createElement("audio");
     // this.sound.src = src;
-    this.sound = new Audio(src);
+    // this.sound = new Audio(src);
+    // this.sound.muted = true;
+    // this.sound.setAttribute("preload", "auto");
+    // if (!sfx) {  
+    //   this.sound.setAttribute("loop", true);
+    // }
+    // this.sound.setAttribute("muted", true);
+    // this.sound.style.display = 'none';
+    // // this.sound.crossOrigin = 'anonymous';
+    // this.sound.setAttribute('crossOrigin', 'anonymous');
+    // document.body.appendChild(this.sound);
+
+    this.sound = document.getElementById(name);
     this.sound.muted = true;
-    this.sound.setAttribute("preload", "auto");
-    if (!sfx) {  
+    if (!sfx) {
       this.sound.setAttribute("loop", true);
+
     }
-    this.sound.setAttribute("muted", true);
-    this.sound.style.display = 'none';
-    // this.sound.crossOrigin = 'anonymous';
-    this.sound.setAttribute('crossOrigin', 'anonymous');
-    document.body.appendChild(this.sound);
   }
   
   play() {

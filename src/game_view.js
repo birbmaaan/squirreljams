@@ -1,7 +1,6 @@
 import Game from './game.js';
 import Menu from './menu.js';
 import Pause from './pause.js';
-import SquirrelSprite from './sprites/squirrel_sprite';
 import Sound from './sound';
 
 class GameView {
@@ -18,10 +17,14 @@ class GameView {
     this.muted = true;
     this.firstClick = 0;
 
-    this.gameMusic = new Sound("../assets/levelmusic.wav");
-    this.menuMusic = new Sound("../assets/menu.wav");
-    this.beep = new Sound("../assets/beep.wav", "sfx");
-    this.boop = new Sound('../assets/dead.wav', "sfx");
+    // this.gameMusic = new Sound("../assets/levelmusic.wav");
+    // this.menuMusic = new Sound("../assets/menu.wav");
+    // this.beep = new Sound("../assets/beep.wav", "sfx");
+    // this.boop = new Sound('../assets/dead.wav', "sfx");
+    this.gameMusic = new Sound("game-music");
+    this.menuMusic = new Sound("menu-music");
+    this.beep = new Sound("beep-music", "sfx");
+    this.boop = new Sound('lose-music', "sfx");
     this.muteButton = document.getElementById('mute-button');
 
     this.muteButton.addEventListener('click', this.muteSound.bind(this));
@@ -54,11 +57,6 @@ class GameView {
       }
       sounds.forEach(sound => sound.muted = this.muted);
     }
-  }
-
-  drawSprite() {
-    const sprite = new SquirrelSprite(this.ctx);
-    sprite.draw();
   }
 
   menu() { 
@@ -119,7 +117,6 @@ class GameView {
   animate() {
     if (!this.paused && this.playing) {
       if (this.game.detectCollision()) {
-        // alert('you died');
         this.gameOver();
       }
 
