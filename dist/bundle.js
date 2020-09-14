@@ -294,6 +294,7 @@ class GameView {
     this.pauseMenu = new _pause_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
     this.frames = 0;
     this.muted = true;
+    this.firstClick = 0;
 
     this.gameMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/levelmusic.wav");
     this.menuMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/menu.wav");
@@ -306,23 +307,30 @@ class GameView {
   }
 
   muteSound(e) {
+    debugger;
+    this.firstClick++;
     const sounds = document.querySelectorAll('video, audio');
-    if (this.muted) {
+    if (this.firstClick === 1) {
       this.muted = false;
-      e.target.innerHTML = 'mute sound';
-      this.beep.play();
+      sounds.forEach(sound => sound.muted = this.muted);
+      e.target.innerHTML = 'mute';
+      this.muted = false;
+      if (this.playing && !this.paused) {
+        return this.gameMusic.play();
+      } else if (!this.dead && !this.playing){
+        return this.menuMusic.play();
+      }
     } else {
-      this.muted = true;
-      e.target.innerHTML = 'unmute sound';
+      if (this.muted) {
+        this.muted = false;
+        e.target.innerHTML = 'mute';
+        this.beep.play()
+      } else {
+        this.muted = true;
+        e.target.innerHTML = 'unmute';
+      }
+      sounds.forEach(sound => sound.muted = this.muted);
     }
-    sounds.forEach(sound => sound.muted = this.muted);
-    // sounds.forEach(sound => {
-    //   if (sound !== undefined) {
-    //     sound.then(sound => sound.muted = this.muted)
-    //     .catch(error => console.log(error));
-    //   }
-    // });
-
   }
 
   drawSprite() {
@@ -332,6 +340,7 @@ class GameView {
 
   menu() { 
     if (!this.playing) {
+      debugger;
       this.menuMusic.play();
       this.startMenu.draw();
       requestAnimationFrame(this.menu.bind(this));
@@ -743,6 +752,7 @@ class Sound {
     // this.sound = document.createElement("audio");
     // this.sound.src = src;
     this.sound = new Audio(src);
+    this.sound.muted = true;
     this.sound.setAttribute("preload", "auto");
     if (!sfx) {  
       this.sound.setAttribute("loop", true);

@@ -3,6 +3,7 @@ class Sound {
     // this.sound = document.createElement("audio");
     // this.sound.src = src;
     this.sound = new Audio(src);
+    this.sound.muted = true;
     this.sound.setAttribute("preload", "auto");
     if (!sfx) {  
       this.sound.setAttribute("loop", true);
