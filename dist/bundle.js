@@ -316,6 +316,12 @@ class GameView {
       e.target.innerHTML = 'unmute sound';
     }
     sounds.forEach(sound => sound.muted = this.muted);
+    // sounds.forEach(sound => {
+    //   if (sound !== undefined) {
+    //     sound.then(sound => sound.muted = this.muted)
+    //     .catch(error => console.log(error));
+    //   }
+    // });
 
   }
 
@@ -742,6 +748,7 @@ class Sound {
     }
     this.sound.setAttribute("muted", true);
     this.sound.style.display = 'none';
+    this.sound.crossOrigin = 'anonymous';
     document.body.appendChild(this.sound);
   }
   

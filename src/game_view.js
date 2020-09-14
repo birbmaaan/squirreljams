@@ -38,6 +38,12 @@ class GameView {
       e.target.innerHTML = 'unmute sound';
     }
     sounds.forEach(sound => sound.muted = this.muted);
+    // sounds.forEach(sound => {
+    //   if (sound !== undefined) {
+    //     sound.then(sound => sound.muted = this.muted)
+    //     .catch(error => console.log(error));
+    //   }
+    // });
 
   }
 
