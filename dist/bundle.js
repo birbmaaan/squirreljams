@@ -293,7 +293,7 @@ class GameView {
     this.startMenu = new _menu_js__WEBPACK_IMPORTED_MODULE_1__["default"](ctx);
     this.pauseMenu = new _pause_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
     this.frames = 0;
-    this.muted = false;
+    this.muted = true;
 
     this.gameMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/levelmusic.wav");
     this.menuMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/menu.wav");
@@ -342,7 +342,6 @@ class GameView {
   }
 
   restart() {
-    debugger;
     this.clearScreen();
     this.clearCache();
     this.boop.stop();
@@ -741,6 +740,7 @@ class Sound {
     if (!sfx) {  
       this.sound.setAttribute("loop", true);
     }
+    this.sound.setAttribute("muted", true);
     this.sound.style.display = 'none';
     document.body.appendChild(this.sound);
   }

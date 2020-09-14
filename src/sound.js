@@ -6,6 +6,7 @@ class Sound {
     if (!sfx) {  
       this.sound.setAttribute("loop", true);
     }
+    this.sound.setAttribute("muted", true);
     this.sound.style.display = 'none';
     document.body.appendChild(this.sound);
   }
