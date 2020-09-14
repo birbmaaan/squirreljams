@@ -10,7 +10,8 @@ class Sound {
     }
     this.sound.setAttribute("muted", true);
     this.sound.style.display = 'none';
-    this.sound.crossOrigin = 'anonymous';
+    // this.sound.crossOrigin = 'anonymous';
+    this.sound.setAttribute('crossOrigin', 'anonymous');
     document.body.appendChild(this.sound);
   }
   

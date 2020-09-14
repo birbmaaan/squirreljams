@@ -37,6 +37,7 @@ class GameView {
       sounds.forEach(sound => sound.muted = this.muted);
       e.target.innerHTML = 'mute';
       this.muted = false;
+      this.beep.playSFX();
       if (this.playing && !this.paused) {
         return this.gameMusic.play();
       } else if (!this.dead && !this.playing){
