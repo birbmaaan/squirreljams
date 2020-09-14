@@ -4,10 +4,12 @@ import Treetrunk from './treetrunks.js';
 import Background from './background.js';
 
 class Game {
-  constructor(ctx) {
+  constructor(ctx, paused) {
     this.DIM_X = 1280;
     this.DIM_Y = 720;
     this.NUM_OBSTACLES = 30;
+    this.paused = paused;
+
     this.liveObstacles = [false, false, false];
     this.squirrels = [];
     this.trees = [];
@@ -22,7 +24,7 @@ class Game {
     this.sqrlCtx = this.getSquirrelCanvas();
     this.ctx = ctx;
     for (let i = 0; i <= 2; i++) {
-      this.add(new Squirrel(i, this.sqrlCtx));
+      this.add(new Squirrel(i, this.sqrlCtx, paused));
       this.trees.push(new Treetrunk(i));
     };
   }

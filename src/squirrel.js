@@ -1,7 +1,7 @@
 import SquirrelSprite from './sprites/squirrel_sprite';
 
 const COLOR = 'orange';
-const POS = {0: [545, 600], 1: [125, 600], 2: [965, 600]};
+const POS = { 0: [545, 600], 1: [125, 600], 2: [965, 600] };
 const SIZE = [35, 60]
 const SPEED = 10;
 const POSITIONS = {
@@ -20,7 +20,8 @@ class Squirrel {
     this.pos = POS[squirrelNo];
     this.speed = SPEED;
     this.moving = false;
-    this.size = SIZE; 
+    this.jumping = null;
+    this.size = SIZE;
     this.positions = {
       farleft: POSITIONS.farleft[squirrelNo],
       left: POSITIONS.left[squirrelNo],
@@ -33,7 +34,11 @@ class Squirrel {
 
   draw(ctx) {
     // this.drawHitBox(ctx);
-    this.sprite.step(this.pos[0], this.pos[1]);
+    if (!this.jumping) {
+      this.sprite.step(this.pos[0], this.pos[1]);
+    } else {
+      this.sprite.jump(this.pos[0], this.pos[1], this.jumping);
+    }
   }
 
   drawHitBox(ctx) {
@@ -63,7 +68,7 @@ class Squirrel {
       this.moveLeft();
     }
   }
-  
+
   rightMovement() {
     if (this.pos[0] === this.positions.right) {
       this.jumpRight();
@@ -76,35 +81,35 @@ class Squirrel {
     this.pos[0] -= 7
     this.jumpAnimationLeft = requestAnimationFrame(this.jumpLeft.bind(this))
     if (this.pos[0] < this.positions.farleft) {
+      this.jumping = 'left';
       this.pos[0] = this.positions.farleft;
       cancelAnimationFrame(this.jumpAnimationLeft);
       this.jumpApex(0);
-      // setTimeout(() => this.jumpBack(), 300);
     }
   }
-  
+
   moveLeft() {
     this.pos[0] -= 7
     this.moveAnimationLeft = requestAnimationFrame(this.moveLeft.bind(this))
-    
+
     if (this.pos[0] <= this.positions.left) {
       this.pos[0] = this.positions.left;
       this.moving = false;
       cancelAnimationFrame(this.moveAnimationLeft);
     }
   }
-  
+
   jumpRight() {
     this.pos[0] += 7
     this.jumpAnimationRight = requestAnimationFrame(this.jumpRight.bind(this))
     if (this.pos[0] > this.positions.farright) {
+      this.jumping = 'right';
       this.pos[0] = this.positions.farright;
       cancelAnimationFrame(this.jumpAnimationRight);
       this.jumpApex(0);
-      // setTimeout(() => this.jumpBack(), 300);
     }
   }
-  
+
   moveRight() {
     this.pos[0] += 7
     this.moveAnimationRight = requestAnimationFrame(this.moveRight.bind(this))
@@ -126,7 +131,7 @@ class Squirrel {
     }
 
   }
-  
+
   jumpBack() {
     let distance;
     let location;
@@ -136,17 +141,18 @@ class Squirrel {
     } else {
       distance = -7;
       location = this.positions.right;
-    } 
+    }
 
     this.pos[0] += distance;
     this.jumpAnimationBack = requestAnimationFrame(this.jumpBack.bind(this))
-    if ((distance === -7 && this.pos[0] <= this.positions.right) || 
-        (distance === 7 && this.pos[0] >= this.positions.left)) {
+    if ((distance === -7 && this.pos[0] <= this.positions.right) ||
+      (distance === 7 && this.pos[0] >= this.positions.left)) {
       this.pos[0] = location;
       this.moving = false;
+      this.jumping = null;
       cancelAnimationFrame(this.jumpAnimationBack);
     }
   }
 }
-  
+
 export default Squirrel;

@@ -8,6 +8,7 @@ class SquirrelSprite {
     this.height = 100;
     this.column = SQUIRREL_COLUMN[squirrelNo];
     this.cycleLoop = [55, 81];
+    this.jumpLoop = [28, 80]
     this.currentLoopIndex = 0;
   }
 
@@ -21,6 +22,23 @@ class SquirrelSprite {
 
   step(canvasX, canvasY) {
     this.draw(this.cycleLoop[this.currentLoopIndex], 1, canvasX - 30, canvasY - 5);
+    this.currentLoopIndex++;
+    if (this.currentLoopIndex >= this.cycleLoop.length) {
+      this.currentLoopIndex = 0;
+    }
+  }
+
+  jump(canvasX, canvasY, direction) {
+    let jumpPos;
+    let newX;
+    if (direction === 'left') {
+      jumpPos = 55;
+      newX = canvasX - 30;
+    } else {
+      jumpPos = 81;
+      newX = canvasX - 10;
+    }
+    this.draw(jumpPos, this.jumpLoop[this.currentLoopIndex], newX, canvasY - 5);
     this.currentLoopIndex++;
     if (this.currentLoopIndex >= this.cycleLoop.length) {
       this.currentLoopIndex = 0;

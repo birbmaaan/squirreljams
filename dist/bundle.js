@@ -140,10 +140,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Game {
-  constructor(ctx) {
+  constructor(ctx, paused) {
     this.DIM_X = 1280;
     this.DIM_Y = 720;
     this.NUM_OBSTACLES = 30;
+    this.paused = paused;
+
     this.liveObstacles = [false, false, false];
     this.squirrels = [];
     this.trees = [];
@@ -158,7 +160,7 @@ class Game {
     this.sqrlCtx = this.getSquirrelCanvas();
     this.ctx = ctx;
     for (let i = 0; i <= 2; i++) {
-      this.add(new _squirrel_js__WEBPACK_IMPORTED_MODULE_1__["default"](i, this.sqrlCtx));
+      this.add(new _squirrel_js__WEBPACK_IMPORTED_MODULE_1__["default"](i, this.sqrlCtx, paused));
       this.trees.push(new _treetrunks_js__WEBPACK_IMPORTED_MODULE_2__["default"](i));
     };
   }
@@ -273,6 +275,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _menu_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu.js */ "./src/menu.js");
 /* harmony import */ var _pause_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pause.js */ "./src/pause.js");
 /* harmony import */ var _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sprites/squirrel_sprite */ "./src/sprites/squirrel_sprite.js");
+/* harmony import */ var _sound__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./sound */ "./src/sound.js");
+
 
 
 
@@ -280,74 +284,107 @@ __webpack_require__.r(__webpack_exports__);
 
 class GameView {
   constructor(ctx) {
-    this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
-    this.timeOuts = {};
-    this.ctx = ctx;
     this.paused = false;
+    this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx, this.paused);
+    this.ctx = ctx;
     this.playing = false;
+    this.dead = false;
     this.activeSquirrels = 0;
     this.startMenu = new _menu_js__WEBPACK_IMPORTED_MODULE_1__["default"](ctx);
     this.pauseMenu = new _pause_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    this.frames = 0;
+    this.muted = false;
 
+    this.gameMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/levelmusic.wav");
+    this.menuMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/menu.wav");
+    this.beep = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/beep.wav", "sfx");
+    this.boop = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]('../assets/dead.wav', "sfx");
+    this.muteButton = document.getElementById('mute-button');
+
+    this.muteButton.addEventListener('click', this.muteSound.bind(this));
     this.bindKeyHandlers();
+  }
+
+  muteSound(e) {
+    const sounds = document.querySelectorAll('video, audio');
+    if (this.muted) {
+      this.muted = false;
+      e.target.innerHTML = 'mute sound';
+      this.beep.play();
+    } else {
+      this.muted = true;
+      e.target.innerHTML = 'unmute sound';
+    }
+    sounds.forEach(sound => sound.muted = this.muted);
+
   }
 
   drawSprite() {
     const sprite = new _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_3__["default"](this.ctx);
-    // debugger;
     sprite.draw();
   }
 
   menu() { 
     if (!this.playing) {
+      this.menuMusic.play();
       this.startMenu.draw();
       requestAnimationFrame(this.menu.bind(this));
     }
   }
 
   start() {
+    this.menuMusic.stop();
+    this.gameMusic.restart();
+    this.gameMusic.play();
     this.game.squirrels[0].active = true;
     this.activeSquirrels++;
-    this.timeOuts[3] = setTimeout(() => {
-      this.game.liveObstacles[0] = true;
-    }, 2500);
     this.animate();
-
-    this.timeOuts[1] = setTimeout(() => {
-      this.game.squirrels[1].active = true;
-      this.activeSquirrels++;
-      this.timeOuts[4] = setTimeout(() => {
-        this.game.liveObstacles[1] = true;
-      }, 2500);
-    }, 10000);
-
-    this.timeOuts[2] = setTimeout(() => {
-      this.game.squirrels[2].active = true;
-      this.activeSquirrels++;
-      this.timeOuts[5] = setTimeout(() => {
-        this.game.liveObstacles[2] = true;
-      }, 2500);
-    }, 20000);
   }
 
   restart() {
+    debugger;
     this.clearScreen();
     this.clearCache();
+    this.boop.stop();
+    this.menuMusic.restart();
     this.menu();
   }
 
   clearScreen() {
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+    this.pauseMenu.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.background.clear();
     this.game.sqrlCtx.clearRect(0, 560, this.game.DIM_X, this.game.DIM_Y);
   }
 
+  clearCache() {
+    this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx);
+    this.game.background.clear();
+    this.game.squirrels.forEach(squirrel => {
+      squirrel.active = false;
+    })
+    this.game.liveObstacles.forEach(obstacle => { obstacle = false })
+    this.playing = false;
+    this.paused = false;
+    this.dead = false;
+    this.activeSquirrels = 0;
+    this.frames = 0;
+  }
+
+  gameOver() {
+    this.gameMusic.stop();
+    this.boop.play();
+    this.dead = true;
+    this.paused = true;
+    this.pauseMenu.gameOver();
+  }
+
   animate() {
     if (!this.paused && this.playing) {
       if (this.game.detectCollision()) {
-        alert('you died');
-        this.restart();
+        // alert('you died');
+        this.gameOver();
       }
 
       for (let i = 0; i <= 2; i++) {
@@ -358,23 +395,42 @@ class GameView {
       this.game.moveObjects();
       this.game.removeObjects();
       this.game.draw(this.ctx);
+      this.drawScore();
+      if (this.frames <= 1900) this.checkActives();
+      this.frames++;
       requestAnimationFrame(this.animate.bind(this));
+
     }
   }
 
-  clearCache() {
-    Object.keys(this.timeOuts).forEach((timeout) => {
-      clearTimeout(this.timeOuts[timeout]);
-    })
-    this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.ctx);
-    this.game.background.clear();
-    this.game.squirrels.forEach(squirrel => {
-      squirrel.active = false;
-    })
-    this.game.liveObstacles.forEach(obstacle => { obstacle = false })
-    this.playing = false;
-    this.paused = false;
-    this.activeSquirrels = 0;
+  checkActives() {
+    switch (this.frames) {
+      case 570:
+        this.game.squirrels[1].active = true;
+        this.activeSquirrels++;
+        break;
+      case 1720:
+        this.game.squirrels[2].active = true;
+        this.activeSquirrels++;
+        break;
+      case 150:
+        this.game.liveObstacles[0] = true;
+        break
+      case 720:
+        this.game.liveObstacles[1] = true;
+        break;
+      case 1870:
+        this.game.liveObstacles[2] = true;
+      default:
+        break;
+    }
+  }
+
+  drawScore() {
+    this.ctx.fillStyle = 'white';
+    this.ctx.textAlign = 'left';
+    const currentScore = Math.floor(this.frames / 60);
+    this.ctx.fillText(`distance: ${currentScore}`, 80, 40);
   }
 
   bindKeyHandlers() {
@@ -382,16 +438,28 @@ class GameView {
   }
 
   controlButtons(e) {
-    if (this.playing) {
+    if (this.dead) {
       switch (e.key) {
         case " ":
+          this.beep.playSFX();
+          this.restart();
+          break;
+        default:
+          break;
+      }
+    } else if (this.playing) {
+      switch (e.key) {
+        case " ":
+          this.beep.playSFX();
           if (this.paused) {
             this.paused = false;
             this.pauseMenu.ctx.clearRect(0, 0, 1280, 720);
             this.animate();
+            this.gameMusic.play();
           } else {
             this.paused = true;
             this.pauseMenu.draw(this.activeSquirrels);
+            this.gameMusic.stop();
           }
           break;
      
@@ -432,6 +500,7 @@ class GameView {
     } else {
       switch (e.key) {
         case " ":
+          this.beep.playSFX();
           this.playing = true;
           this.start();
           break;
@@ -474,7 +543,6 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("It's working! It's working!");
   const ctx = canvas.getContext('2d')
   window.ctx = ctx;
-
   const newGame = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
   newGame.menu();
 })
@@ -532,9 +600,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const COLOR = 'blue';
 const POS = {
-  0: [515, 665, 565],
-  1: [95, 245, 145],
-  2: [935, 1085, 985]}
+  0: [540, 665, 565],
+  1: [120, 245, 145],
+  2: [960, 1085, 985]}
 
 
 class Obstacle {
@@ -561,11 +629,11 @@ class Obstacle {
     if (x === 0)  {
       x = POS[obstacleNo][0];
       side = 'Left';
-      this.size = [100, 40];
+      this.size = [80, 30];
     } else if (x === 1) {
       x = POS[obstacleNo][1];
       side = 'Right';
-      this.size = [100, 40];
+      this.size = [80, 30];
     } else {
       x = POS[obstacleNo][2];
       side = 'Middle';
@@ -612,24 +680,25 @@ class Pause {
   constructor() {
     const pauseCanvas = document.getElementById('game-pause');
     this.ctx = pauseCanvas.getContext('2d');
+    this.pauseImage = document.getElementById('pause-image');
+
+    this.score = 0;
   }
 
   draw(active) {
-    debugger;
-    this.ctx.beginPath();
-    this.ctx.fillStyle = '#333333';
-    this.ctx.fillRect(340, 100, 600, 420);
-    this.ctx.stroke();
+    this.ctx.drawImage(this.pauseImage, 340, 100, 600, 420);
 
     this.ctx.fillStyle = "white";
     this.ctx.font = 'bold 30px titlefont';
     this.ctx.textAlign = 'center';
     if (active === 1) {
-      this.ctx.fillText('~ Avoid the branches! ~', 640, 140);
+      this.ctx.fillText('~ Avoid the branches! ~', 640, 130);
       this.ctx.fillText('press d and f to move left and right', 640, 240);
-      this.ctx.fillText('you can even jump off the tree!', 640, 300);
+      this.ctx.fillText('move all the way to one side', 640, 300);
+      this.ctx.fillText('to jump off the tree!', 640, 360);
+
     } else {
-      this.ctx.fillText('~ Controls ~', 640, 140);
+      this.ctx.fillText('~ Controls ~', 640, 130);
 
       this.ctx.fillText('Left Squirrel: a s', 640, 240);
       this.ctx.fillText('Middle Squirrel: d f', 640, 300);
@@ -637,11 +706,66 @@ class Pause {
         this.ctx.fillText('Right Squirrel: j k', 640, 360);
       }
     }
-    this.ctx.fillText("press space to continue", 640, 500);
+    this.ctx.fillText("press space to continue", 640, 510);
   }
+
+  gameOver() {
+    this.ctx.drawImage(this.pauseImage, 340, 100, 600, 420);
+    this.ctx.fillStyle = "white";
+    this.ctx.font = 'bold 30px titlefont';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('you died', 640, 300);
+    this.ctx.fillText("press space to continue", 640, 510);
+  }
+
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Pause);
+
+/***/ }),
+
+/***/ "./src/sound.js":
+/*!**********************!*\
+  !*** ./src/sound.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class Sound {
+  constructor(src, sfx) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    if (!sfx) {  
+      this.sound.setAttribute("loop", true);
+    }
+    this.sound.style.display = 'none';
+    document.body.appendChild(this.sound);
+  }
+  
+  play() {
+    this.sound.play();
+  }
+
+  playSFX() {
+    this.sound.play();
+    this.restart();
+  }
+
+  stop() {
+    this.sound.pause();
+  }
+
+  restart() {
+    this.sound.currentTime = 0;
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Sound);
+// 57.46
 
 /***/ }),
 
@@ -655,10 +779,10 @@ class Pause {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 const BRANCHES = {
-  'smallLeft': [3, 3, 67, 26, 300, 120, 190, 35],
-  'smallRight': [74, 3, 66, 26, 300, 120, 10, 35],
-  'bigLeft': [3, 33, 66, 44, 300, 200, 200, 105],
-  'bigRight': [74, 33, 66, 44, 300, 200, 5, 105],
+  'smallLeft': [3, 3, 67, 26, 300, 120, 190, 40],
+  'smallRight': [74, 3, 66, 26, 300, 120, 10, 40],
+  'bigLeft': [3, 33, 66, 44, 300, 200, 200, 115],
+  'bigRight': [74, 33, 66, 44, 300, 200, 5, 115],
   'smallMiddle': [3, 81, 47, 18, 220, 60, 38, 10],
   'bigMiddle': [3, 81, 47, 18, 220, 60, 38, 10],
 }
@@ -716,6 +840,7 @@ class SquirrelSprite {
     this.height = 100;
     this.column = SQUIRREL_COLUMN[squirrelNo];
     this.cycleLoop = [55, 81];
+    this.jumpLoop = [28, 80]
     this.currentLoopIndex = 0;
   }
 
@@ -729,6 +854,23 @@ class SquirrelSprite {
 
   step(canvasX, canvasY) {
     this.draw(this.cycleLoop[this.currentLoopIndex], 1, canvasX - 30, canvasY - 5);
+    this.currentLoopIndex++;
+    if (this.currentLoopIndex >= this.cycleLoop.length) {
+      this.currentLoopIndex = 0;
+    }
+  }
+
+  jump(canvasX, canvasY, direction) {
+    let jumpPos;
+    let newX;
+    if (direction === 'left') {
+      jumpPos = 55;
+      newX = canvasX - 30;
+    } else {
+      jumpPos = 81;
+      newX = canvasX - 10;
+    }
+    this.draw(jumpPos, this.jumpLoop[this.currentLoopIndex], newX, canvasY - 5);
     this.currentLoopIndex++;
     if (this.currentLoopIndex >= this.cycleLoop.length) {
       this.currentLoopIndex = 0;
@@ -753,7 +895,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const COLOR = 'orange';
-const POS = {0: [545, 600], 1: [125, 600], 2: [965, 600]};
+const POS = { 0: [545, 600], 1: [125, 600], 2: [965, 600] };
 const SIZE = [35, 60]
 const SPEED = 10;
 const POSITIONS = {
@@ -772,7 +914,8 @@ class Squirrel {
     this.pos = POS[squirrelNo];
     this.speed = SPEED;
     this.moving = false;
-    this.size = SIZE; 
+    this.jumping = null;
+    this.size = SIZE;
     this.positions = {
       farleft: POSITIONS.farleft[squirrelNo],
       left: POSITIONS.left[squirrelNo],
@@ -785,7 +928,11 @@ class Squirrel {
 
   draw(ctx) {
     // this.drawHitBox(ctx);
-    this.sprite.step(this.pos[0], this.pos[1]);
+    if (!this.jumping) {
+      this.sprite.step(this.pos[0], this.pos[1]);
+    } else {
+      this.sprite.jump(this.pos[0], this.pos[1], this.jumping);
+    }
   }
 
   drawHitBox(ctx) {
@@ -815,7 +962,7 @@ class Squirrel {
       this.moveLeft();
     }
   }
-  
+
   rightMovement() {
     if (this.pos[0] === this.positions.right) {
       this.jumpRight();
@@ -828,35 +975,35 @@ class Squirrel {
     this.pos[0] -= 7
     this.jumpAnimationLeft = requestAnimationFrame(this.jumpLeft.bind(this))
     if (this.pos[0] < this.positions.farleft) {
+      this.jumping = 'left';
       this.pos[0] = this.positions.farleft;
       cancelAnimationFrame(this.jumpAnimationLeft);
       this.jumpApex(0);
-      // setTimeout(() => this.jumpBack(), 300);
     }
   }
-  
+
   moveLeft() {
     this.pos[0] -= 7
     this.moveAnimationLeft = requestAnimationFrame(this.moveLeft.bind(this))
-    
+
     if (this.pos[0] <= this.positions.left) {
       this.pos[0] = this.positions.left;
       this.moving = false;
       cancelAnimationFrame(this.moveAnimationLeft);
     }
   }
-  
+
   jumpRight() {
     this.pos[0] += 7
     this.jumpAnimationRight = requestAnimationFrame(this.jumpRight.bind(this))
     if (this.pos[0] > this.positions.farright) {
+      this.jumping = 'right';
       this.pos[0] = this.positions.farright;
       cancelAnimationFrame(this.jumpAnimationRight);
       this.jumpApex(0);
-      // setTimeout(() => this.jumpBack(), 300);
     }
   }
-  
+
   moveRight() {
     this.pos[0] += 7
     this.moveAnimationRight = requestAnimationFrame(this.moveRight.bind(this))
@@ -878,7 +1025,7 @@ class Squirrel {
     }
 
   }
-  
+
   jumpBack() {
     let distance;
     let location;
@@ -888,19 +1035,20 @@ class Squirrel {
     } else {
       distance = -7;
       location = this.positions.right;
-    } 
+    }
 
     this.pos[0] += distance;
     this.jumpAnimationBack = requestAnimationFrame(this.jumpBack.bind(this))
-    if ((distance === -7 && this.pos[0] <= this.positions.right) || 
-        (distance === 7 && this.pos[0] >= this.positions.left)) {
+    if ((distance === -7 && this.pos[0] <= this.positions.right) ||
+      (distance === 7 && this.pos[0] >= this.positions.left)) {
       this.pos[0] = location;
       this.moving = false;
+      this.jumping = null;
       cancelAnimationFrame(this.jumpAnimationBack);
     }
   }
 }
-  
+
 /* harmony default export */ __webpack_exports__["default"] = (Squirrel);
 
 /***/ }),
