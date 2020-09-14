@@ -15,7 +15,7 @@ class GameView {
     this.startMenu = new Menu(ctx);
     this.pauseMenu = new Pause();
     this.frames = 0;
-    this.muted = false;
+    this.muted = true;
 
     this.gameMusic = new Sound("../assets/levelmusic.wav");
     this.menuMusic = new Sound("../assets/menu.wav");
@@ -64,7 +64,6 @@ class GameView {
   }
 
   restart() {
-    debugger;
     this.clearScreen();
     this.clearCache();
     this.boop.stop();
