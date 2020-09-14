@@ -740,8 +740,9 @@ class Pause {
 __webpack_require__.r(__webpack_exports__);
 class Sound {
   constructor(src, sfx) {
-    this.sound = document.createElement("audio");
-    this.sound.src = src;
+    // this.sound = document.createElement("audio");
+    // this.sound.src = src;
+    this.sound = new Audio(src);
     this.sound.setAttribute("preload", "auto");
     if (!sfx) {  
       this.sound.setAttribute("loop", true);
