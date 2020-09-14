@@ -315,6 +315,7 @@ class GameView {
       sounds.forEach(sound => sound.muted = this.muted);
       e.target.innerHTML = 'mute';
       this.muted = false;
+      this.beep.playSFX();
       if (this.playing && !this.paused) {
         return this.gameMusic.play();
       } else if (!this.dead && !this.playing){
@@ -759,7 +760,8 @@ class Sound {
     }
     this.sound.setAttribute("muted", true);
     this.sound.style.display = 'none';
-    this.sound.crossOrigin = 'anonymous';
+    // this.sound.crossOrigin = 'anonymous';
+    this.sound.setAttribute('crossOrigin', 'anonymous');
     document.body.appendChild(this.sound);
   }
   
