@@ -2,6 +2,7 @@ import Game from './game.js';
 import Menu from './menu.js';
 import Pause from './pause.js';
 import SquirrelSprite from './sprites/squirrel_sprite';
+import Sound from './sound';
 
 class GameView {
   constructor(ctx) {
@@ -13,7 +14,30 @@ class GameView {
     this.startMenu = new Menu(ctx);
     this.pauseMenu = new Pause();
     this.frames = 0;
+    this.muted = false;
+
+    this.gameMusic = new Sound("../assets/levelmusic.wav");
+    this.menuMusic = new Sound("../assets/menu.wav");
+    this.beep = new Sound("../assets/beep.wav", "sfx");
+    debugger;
+    this.muteButton = document.getElementById('mute-button');
+
+    this.muteButton.addEventListener('click', this.muteSound.bind(this));
     this.bindKeyHandlers();
+  }
+
+  muteSound(e) {
+    const sounds = document.querySelectorAll('video, audio');
+    if (this.muted) {
+      this.muted = false;
+      e.target.innerHTML = 'mute sound';
+      this.beep.play();
+    } else {
+      this.muted = true;
+      e.target.innerHTML = 'unmute sound';
+    }
+    sounds.forEach(sound => sound.muted = this.muted);
+
   }
 
   drawSprite() {
@@ -23,12 +47,16 @@ class GameView {
 
   menu() { 
     if (!this.playing) {
+      this.menuMusic.play();
       this.startMenu.draw();
       requestAnimationFrame(this.menu.bind(this));
     }
   }
 
   start() {
+    this.menuMusic.stop();
+    this.gameMusic.restart();
+    this.gameMusic.play();
     this.game.squirrels[0].active = true;
     this.activeSquirrels++;
     this.animate();
@@ -37,6 +65,8 @@ class GameView {
   restart() {
     this.clearScreen();
     this.clearCache();
+    this.gameMusic.stop();
+    this.menuMusic.restart();
     this.menu();
   }
 
@@ -57,7 +87,7 @@ class GameView {
     this.playing = false;
     this.paused = false;
     this.activeSquirrels = 0;
-    this.score = 0;
+    this.frames = 0;
   }
 
   animate() {
@@ -76,7 +106,7 @@ class GameView {
       this.game.removeObjects();
       this.game.draw(this.ctx);
       this.drawScore();
-      if (this.frames <= 1350) this.checkActives();
+      if (this.frames <= 1900) this.checkActives();
       this.frames++;
       requestAnimationFrame(this.animate.bind(this));
 
@@ -85,21 +115,21 @@ class GameView {
 
   checkActives() {
     switch (this.frames) {
-      case 600:
+      case 570:
         this.game.squirrels[1].active = true;
         this.activeSquirrels++;
         break;
-      case 1200:
+      case 1720:
         this.game.squirrels[2].active = true;
         this.activeSquirrels++;
         break;
       case 150:
         this.game.liveObstacles[0] = true;
-        break;
-      case 750:
+        break
+      case 720:
         this.game.liveObstacles[1] = true;
         break;
-      case 1350:
+      case 1870:
         this.game.liveObstacles[2] = true;
       default:
         break;
@@ -121,13 +151,16 @@ class GameView {
     if (this.playing) {
       switch (e.key) {
         case " ":
+          this.beep.playSFX();
           if (this.paused) {
             this.paused = false;
             this.pauseMenu.ctx.clearRect(0, 0, 1280, 720);
             this.animate();
+            this.gameMusic.play();
           } else {
             this.paused = true;
             this.pauseMenu.draw(this.activeSquirrels);
+            this.gameMusic.stop();
           }
           break;
      
@@ -168,6 +201,7 @@ class GameView {
     } else {
       switch (e.key) {
         case " ":
+          this.beep.playSFX();
           this.playing = true;
           this.start();
           break;
