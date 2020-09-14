@@ -288,6 +288,7 @@ class GameView {
     this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx, this.paused);
     this.ctx = ctx;
     this.playing = false;
+    this.dead = false;
     this.activeSquirrels = 0;
     this.startMenu = new _menu_js__WEBPACK_IMPORTED_MODULE_1__["default"](ctx);
     this.pauseMenu = new _pause_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
@@ -297,7 +298,7 @@ class GameView {
     this.gameMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/levelmusic.wav");
     this.menuMusic = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/menu.wav");
     this.beep = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]("../assets/beep.wav", "sfx");
-    debugger;
+    this.boop = new _sound__WEBPACK_IMPORTED_MODULE_4__["default"]('../assets/dead.wav', "sfx");
     this.muteButton = document.getElementById('mute-button');
 
     this.muteButton.addEventListener('click', this.muteSound.bind(this));
@@ -341,15 +342,16 @@ class GameView {
   }
 
   restart() {
+    debugger;
     this.clearScreen();
     this.clearCache();
-    this.gameMusic.stop();
     this.menuMusic.restart();
     this.menu();
   }
 
   clearScreen() {
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+    this.pauseMenu.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.background.clear();
     this.game.sqrlCtx.clearRect(0, 560, this.game.DIM_X, this.game.DIM_Y);
@@ -364,15 +366,24 @@ class GameView {
     this.game.liveObstacles.forEach(obstacle => { obstacle = false })
     this.playing = false;
     this.paused = false;
+    this.dead = false;
     this.activeSquirrels = 0;
     this.frames = 0;
+  }
+
+  gameOver() {
+    this.gameMusic.stop();
+    this.boop.play();
+    this.dead = true;
+    this.paused = true;
+    this.pauseMenu.gameOver();
   }
 
   animate() {
     if (!this.paused && this.playing) {
       if (this.game.detectCollision()) {
-        alert('you died');
-        this.restart();
+        // alert('you died');
+        this.gameOver();
       }
 
       for (let i = 0; i <= 2; i++) {
@@ -426,7 +437,16 @@ class GameView {
   }
 
   controlButtons(e) {
-    if (this.playing) {
+    if (this.dead) {
+      switch (e.key) {
+        case " ":
+          this.beep.playSFX();
+          this.restart();
+          break;
+        default:
+          break;
+      }
+    } else if (this.playing) {
       switch (e.key) {
         case " ":
           this.beep.playSFX();
@@ -665,10 +685,6 @@ class Pause {
   }
 
   draw(active) {
-    // this.ctx.beginPath();
-    // this.ctx.fillStyle = '#333333';
-    // this.ctx.fillRect(340, 100, 600, 420);
-    // this.ctx.stroke();
     this.ctx.drawImage(this.pauseImage, 340, 100, 600, 420);
 
     this.ctx.fillStyle = "white";
@@ -689,6 +705,15 @@ class Pause {
         this.ctx.fillText('Right Squirrel: j k', 640, 360);
       }
     }
+    this.ctx.fillText("press space to continue", 640, 510);
+  }
+
+  gameOver() {
+    this.ctx.drawImage(this.pauseImage, 340, 100, 600, 420);
+    this.ctx.fillStyle = "white";
+    this.ctx.font = 'bold 30px titlefont';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('you died', 640, 300);
     this.ctx.fillText("press space to continue", 640, 510);
   }
 

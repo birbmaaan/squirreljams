@@ -54,23 +54,37 @@ footer {
   display: flex;
   width: 1280px;
   justify-content: center;
+  color: white;
+  /* font-size: 16px; */
+}
+
+#author {
+  font-size: 18px;
+}
+
+#author p {
+  margin: 0;
+}
+
+#author button {
+  width: 100%;
+  margin-top: 5px;
 }
 
 button {
-  font-size: 30px;
-  font-family: 'titlefont';
   background-color: #333333;
   border: 2px solid white;
   border-radius: 5px;
+  font-family: 'titlefont';
+}
+
+#mute-button {
+  font-size: 30px;
   padding: 5px 10px;
   color: white;
   outline: none;
-  margin-right: 20px;
+  margin-left: 20px;
 }
-
-/* button:first-child {
-  margin-right: 20px;
-} */
 
 button:hover {
   background-color: #666666;
@@ -79,6 +93,10 @@ button:hover {
  
 a {
   text-decoration: none;
+  font-size: 18px;
+  padding: 5px;
+  display: block;
+  width: 100%;
 }
 
 a:visited {

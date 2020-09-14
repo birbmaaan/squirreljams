@@ -8,10 +8,6 @@ class Pause {
   }
 
   draw(active) {
-    // this.ctx.beginPath();
-    // this.ctx.fillStyle = '#333333';
-    // this.ctx.fillRect(340, 100, 600, 420);
-    // this.ctx.stroke();
     this.ctx.drawImage(this.pauseImage, 340, 100, 600, 420);
 
     this.ctx.fillStyle = "white";
@@ -32,6 +28,15 @@ class Pause {
         this.ctx.fillText('Right Squirrel: j k', 640, 360);
       }
     }
+    this.ctx.fillText("press space to continue", 640, 510);
+  }
+
+  gameOver() {
+    this.ctx.drawImage(this.pauseImage, 340, 100, 600, 420);
+    this.ctx.fillStyle = "white";
+    this.ctx.font = 'bold 30px titlefont';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('you died', 640, 300);
     this.ctx.fillText("press space to continue", 640, 510);
   }
 

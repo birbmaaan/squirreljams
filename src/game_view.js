@@ -10,6 +10,7 @@ class GameView {
     this.game = new Game(ctx, this.paused);
     this.ctx = ctx;
     this.playing = false;
+    this.dead = false;
     this.activeSquirrels = 0;
     this.startMenu = new Menu(ctx);
     this.pauseMenu = new Pause();
@@ -19,7 +20,7 @@ class GameView {
     this.gameMusic = new Sound("../assets/levelmusic.wav");
     this.menuMusic = new Sound("../assets/menu.wav");
     this.beep = new Sound("../assets/beep.wav", "sfx");
-    debugger;
+    this.boop = new Sound('../assets/dead.wav', "sfx");
     this.muteButton = document.getElementById('mute-button');
 
     this.muteButton.addEventListener('click', this.muteSound.bind(this));
@@ -63,15 +64,16 @@ class GameView {
   }
 
   restart() {
+    debugger;
     this.clearScreen();
     this.clearCache();
-    this.gameMusic.stop();
     this.menuMusic.restart();
     this.menu();
   }
 
   clearScreen() {
     this.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
+    this.pauseMenu.ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.trees[0].ctx.clearRect(0, 0, this.game.DIM_X, this.game.DIM_Y);
     this.game.background.clear();
     this.game.sqrlCtx.clearRect(0, 560, this.game.DIM_X, this.game.DIM_Y);
@@ -86,15 +88,24 @@ class GameView {
     this.game.liveObstacles.forEach(obstacle => { obstacle = false })
     this.playing = false;
     this.paused = false;
+    this.dead = false;
     this.activeSquirrels = 0;
     this.frames = 0;
+  }
+
+  gameOver() {
+    this.gameMusic.stop();
+    this.boop.play();
+    this.dead = true;
+    this.paused = true;
+    this.pauseMenu.gameOver();
   }
 
   animate() {
     if (!this.paused && this.playing) {
       if (this.game.detectCollision()) {
-        alert('you died');
-        this.restart();
+        // alert('you died');
+        this.gameOver();
       }
 
       for (let i = 0; i <= 2; i++) {
@@ -148,7 +159,16 @@ class GameView {
   }
 
   controlButtons(e) {
-    if (this.playing) {
+    if (this.dead) {
+      switch (e.key) {
+        case " ":
+          this.beep.playSFX();
+          this.restart();
+          break;
+        default:
+          break;
+      }
+    } else if (this.playing) {
       switch (e.key) {
         case " ":
           this.beep.playSFX();
