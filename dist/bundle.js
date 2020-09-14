@@ -294,10 +294,6 @@ class GameView {
     this.muted = true;
     this.firstClick = 0;
 
-    // this.gameMusic = new Sound("../assets/levelmusic.wav");
-    // this.menuMusic = new Sound("../assets/menu.wav");
-    // this.beep = new Sound("../assets/beep.wav", "sfx");
-    // this.boop = new Sound('../assets/dead.wav', "sfx");
     this.gameMusic = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]("game-music");
     this.menuMusic = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]("menu-music");
     this.beep = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]("beep-music", "sfx");
@@ -309,7 +305,6 @@ class GameView {
   }
 
   muteSound(e) {
-    debugger;
     this.firstClick++;
     const sounds = document.querySelectorAll('video, audio');
     if (this.firstClick === 1) {
@@ -553,8 +548,10 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("It's working! It's working!");
   const ctx = canvas.getContext('2d')
   window.ctx = ctx;
-  const newGame = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
-  newGame.menu();
+  window.onload = () => {
+    const newGame = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
+    newGame.menu();
+  }
 })
 
 /***/ }),
@@ -745,49 +742,27 @@ class Pause {
 __webpack_require__.r(__webpack_exports__);
 class Sound {
   constructor(name, sfx) {
-    // this.sound = document.createElement("audio");
-    // this.sound.src = src;
-    // this.sound = new Audio(src);
-    // this.sound.muted = true;
-    // this.sound.setAttribute("preload", "auto");
-    // if (!sfx) {  
-    //   this.sound.setAttribute("loop", true);
-    // }
-    // this.sound.setAttribute("muted", true);
-    // this.sound.style.display = 'none';
-    // // this.sound.crossOrigin = 'anonymous';
-    // this.sound.setAttribute('crossOrigin', 'anonymous');
-    // document.body.appendChild(this.sound);
-
     this.sound = document.getElementById(name);
     this.sound.muted = true;
-    if (!sfx) {
-      this.sound.setAttribute("loop", true);
-
-    }
   }
   
   play() {
     this.sound.play();
   }
-
   playSFX() {
     this.sound.play();
     this.restart();
   }
-
   stop() {
     this.sound.pause();
   }
-
   restart() {
     this.sound.currentTime = 0;
   }
-
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Sound);
-// 57.46
+
 
 /***/ }),
 

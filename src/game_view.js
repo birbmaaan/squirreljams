@@ -17,10 +17,6 @@ class GameView {
     this.muted = true;
     this.firstClick = 0;
 
-    // this.gameMusic = new Sound("../assets/levelmusic.wav");
-    // this.menuMusic = new Sound("../assets/menu.wav");
-    // this.beep = new Sound("../assets/beep.wav", "sfx");
-    // this.boop = new Sound('../assets/dead.wav', "sfx");
     this.gameMusic = new Sound("game-music");
     this.menuMusic = new Sound("menu-music");
     this.beep = new Sound("beep-music", "sfx");
@@ -32,7 +28,6 @@ class GameView {
   }
 
   muteSound(e) {
-    debugger;
     this.firstClick++;
     const sounds = document.querySelectorAll('video, audio');
     if (this.firstClick === 1) {
