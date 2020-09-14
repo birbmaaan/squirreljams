@@ -341,7 +341,6 @@ class GameView {
 
   menu() { 
     if (!this.playing) {
-      debugger;
       if (this.firstClick > 0) this.menuMusic.play();
       this.startMenu.draw();
       requestAnimationFrame(this.menu.bind(this));
