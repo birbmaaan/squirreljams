@@ -1,7 +1,7 @@
 class Sound {
   constructor(name, sfx) {
     this.sound = document.getElementById(name);
-    this.sound.muted = true;
+    this.sound.muted = false;
   }
   
   play() {

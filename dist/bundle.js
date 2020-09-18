@@ -121,6 +121,53 @@ class Background {
 
 /***/ }),
 
+/***/ "./src/controls_menu.js":
+/*!******************************!*\
+  !*** ./src/controls_menu.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class ControlsMenu {
+  constructor() {
+    const pauseCanvas = document.getElementById('game-pause');
+    this.ctx = pauseCanvas.getContext('2d');
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.rect(0, 0, 1280, 720);
+    ctx.fillStyle = "black";
+    ctx.fill();
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    this.ctx.fillStyle = "white";
+    this.ctx.font = 'bold 30px titlefont';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('Take control of your squirrel and avoid the branches', 640, 80);
+    this.ctx.fillText("Be careful! Where there's one squirrel, there are bound to be more", 640, 140);
+    this.ctx.fillText('Move all the way to one side to jump off the tree and around branches', 640, 200);
+    
+    this.ctx.fillText('~ Controls ~', 640, 280);
+    this.ctx.fillText('First Squirrel............d f', 640, 320);
+    this.ctx.fillText('Second Squirrel........j k', 640, 360);
+    this.ctx.fillText('Third Squirrel..........a s', 640, 400);
+    
+    this.ctx.fillText('Pause.....................space', 640, 460);
+    this.ctx.fillText('Sound on/off................m', 640, 500);
+    this.ctx.fillText('Pause anytime to see the controls', 640, 600);
+    this.ctx.fillText("press space to continue", 640, 680);
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (ControlsMenu);
+
+/***/ }),
+
 /***/ "./src/game.js":
 /*!*********************!*\
   !*** ./src/game.js ***!
@@ -275,6 +322,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _menu_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu.js */ "./src/menu.js");
 /* harmony import */ var _pause_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pause.js */ "./src/pause.js");
 /* harmony import */ var _sound__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sound */ "./src/sound.js");
+/* harmony import */ var _controls_menu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./controls_menu */ "./src/controls_menu.js");
+
 
 
 
@@ -287,48 +336,30 @@ class GameView {
     this.ctx = ctx;
     this.playing = false;
     this.dead = false;
-    this.activeSquirrels = 0;
     this.startMenu = new _menu_js__WEBPACK_IMPORTED_MODULE_1__["default"](ctx);
     this.pauseMenu = new _pause_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    this.controlsMenu = new _controls_menu__WEBPACK_IMPORTED_MODULE_4__["default"]();
     this.frames = 0;
-    this.muted = true;
+    this.muted = false;
     this.firstClick = 0;
 
     this.gameMusic = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]("game-music");
     this.menuMusic = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]("menu-music");
     this.beep = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]("beep-music", "sfx");
     this.boop = new _sound__WEBPACK_IMPORTED_MODULE_3__["default"]('lose-music', "sfx");
-    this.muteButton = document.getElementById('mute-button');
 
-    this.muteButton.addEventListener('click', this.muteSound.bind(this));
     this.bindKeyHandlers();
   }
 
-  muteSound(e) {
-    this.firstClick++;
-    const sounds = document.querySelectorAll('video, audio');
-    if (this.firstClick === 1) {
-      this.muted = false;
-      sounds.forEach(sound => sound.muted = this.muted);
-      e.target.innerHTML = 'mute';
-      this.muted = false;
-      this.beep.playSFX();
-      if (this.playing && !this.paused) {
-        return this.gameMusic.play();
-      } else if (!this.dead && !this.playing){
-        return this.menuMusic.play();
-      }
-    } else {
-      if (this.muted) {
-        this.muted = false;
-        e.target.innerHTML = 'mute';
-        this.beep.play()
-      } else {
-        this.muted = true;
-        e.target.innerHTML = 'unmute';
-      }
-      sounds.forEach(sound => sound.muted = this.muted);
-    }
+  muteSound() {
+    const sounds = document.querySelectorAll('video, audio')
+    this.beep.playSFX();
+    this.muted = this.muted ? false : true;
+    sounds.forEach(sound => sound.muted = this.muted);
+  }
+
+  drawControlsMenu()  {
+    this.controlsMenu.draw();
   }
 
   menu() { 
@@ -344,7 +375,6 @@ class GameView {
     this.gameMusic.restart();
     this.gameMusic.play();
     this.game.squirrels[0].active = true;
-    this.activeSquirrels++;
     this.animate();
   }
 
@@ -374,7 +404,6 @@ class GameView {
     this.playing = false;
     this.paused = false;
     this.dead = false;
-    this.activeSquirrels = 0;
     this.frames = 0;
   }
 
@@ -411,21 +440,19 @@ class GameView {
   checkActives() {
     switch (this.frames) {
       case 570:
-        this.game.squirrels[1].active = true;
-        this.activeSquirrels++;
+        this.game.squirrels[2].active = true;
         break;
       case 1720:
-        this.game.squirrels[2].active = true;
-        this.activeSquirrels++;
+        this.game.squirrels[1].active = true;
         break;
       case 150:
         this.game.liveObstacles[0] = true;
         break
       case 720:
-        this.game.liveObstacles[1] = true;
+        this.game.liveObstacles[2] = true;
         break;
       case 1870:
-        this.game.liveObstacles[2] = true;
+        this.game.liveObstacles[1] = true;
       default:
         break;
     }
@@ -443,7 +470,21 @@ class GameView {
   }
 
   controlButtons(e) {
-    if (this.dead) {
+    if (e.key === 'm') {
+      this.muteSound();
+    }
+
+    if (this.firstClick === 0) {
+      switch (e.key) {
+        case " ":
+          this.firstClick++;
+          this.controlsMenu.ctx.clearRect(0, 0, 1280, 720);
+          this.menu();
+          break;
+        default:
+          break;
+      }
+    } else if (this.dead) {
       switch (e.key) {
         case " ":
           this.beep.playSFX();
@@ -463,7 +504,7 @@ class GameView {
             this.gameMusic.play();
           } else {
             this.paused = true;
-            this.pauseMenu.draw(this.activeSquirrels);
+            this.pauseMenu.draw();
             this.gameMusic.stop();
           }
           break;
@@ -531,26 +572,15 @@ class GameView {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_view.js */ "./src/game_view.js");
-/* harmony import */ var _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sprites/squirrel_sprite */ "./src/sprites/squirrel_sprite.js");
-/* harmony import */ var _sprites_branch_sprite__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sprites/branch_sprite */ "./src/sprites/branch_sprite.js");
-/* harmony import */ var _pause__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pause */ "./src/pause.js");
 
-
-
-
-
-window.BranchSprite = _sprites_branch_sprite__WEBPACK_IMPORTED_MODULE_2__["default"];
-window.SquirrelSprite = _sprites_squirrel_sprite__WEBPACK_IMPORTED_MODULE_1__["default"];
-window.Pause = _pause__WEBPACK_IMPORTED_MODULE_3__["default"];
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('game-canvas');
-  console.log("It's working! It's working!");
   const ctx = canvas.getContext('2d')
   window.ctx = ctx;
   window.onload = () => {
     const newGame = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
-    newGame.menu();
+    newGame.drawControlsMenu();
   }
 })
 
@@ -692,27 +722,19 @@ class Pause {
     this.score = 0;
   }
 
-  draw(active) {
+  draw() {
     this.ctx.drawImage(this.pauseImage, 340, 100, 600, 420);
 
     this.ctx.fillStyle = "white";
     this.ctx.font = 'bold 30px titlefont';
     this.ctx.textAlign = 'center';
-    if (active === 1) {
-      this.ctx.fillText('~ Avoid the branches! ~', 640, 130);
-      this.ctx.fillText('press d and f to move left and right', 640, 240);
-      this.ctx.fillText('move all the way to one side', 640, 300);
-      this.ctx.fillText('to jump off the tree!', 640, 360);
+    this.ctx.fillText('~ Controls ~', 640, 130);
+    this.ctx.fillText('First Squirrel............d f', 640, 200);
+    this.ctx.fillText('Second Squirrel........j k', 640, 240);
+    this.ctx.fillText('Third Squirrel..........a s', 640, 280);
 
-    } else {
-      this.ctx.fillText('~ Controls ~', 640, 130);
-
-      this.ctx.fillText('Left Squirrel: a s', 640, 240);
-      this.ctx.fillText('Middle Squirrel: d f', 640, 300);
-      if (active === 3) {
-        this.ctx.fillText('Right Squirrel: j k', 640, 360);
-      }
-    }
+    this.ctx.fillText('Pause.....................space', 640, 380);
+    this.ctx.fillText('Sound on/off................m', 640, 420);
     this.ctx.fillText("press space to continue", 640, 510);
   }
 
@@ -743,7 +765,7 @@ __webpack_require__.r(__webpack_exports__);
 class Sound {
   constructor(name, sfx) {
     this.sound = document.getElementById(name);
-    this.sound.muted = true;
+    this.sound.muted = false;
   }
   
   play() {
