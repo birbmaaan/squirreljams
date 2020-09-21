@@ -17,7 +17,7 @@ Built using JavaScript and HTML5, Squirrel Jams is an endless runner game in the
 4. pause: space
 5. sound on/off: M
 
-## List of technologies
+## Technologies used
 1. JavaScript
 2. HTML5
 3. BeepBox music maker
@@ -26,7 +26,7 @@ Built using JavaScript and HTML5, Squirrel Jams is an endless runner game in the
 
 ### 1. Animation loop and resetting the game
 
-The biggest challenge in creating this game was making sure the game loop worked smoothly.
+The biggest challenge in creating this game was making sure the game loop worked smoothly. With so many moving parts, it was a continual process of tweaking variables, clearing various canvases, and resetting values to ensure everything was entirely reset when a player dies and starts again. 
 
 ### 2. Hitboxes and sprite generation
 
