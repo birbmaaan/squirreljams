@@ -17,7 +17,6 @@ class Squirrelicon {
   }
 
   draw() {
-    debugger;
     const { width, height } = this;
     this.ctx.clearRect(0, 0, 100, 100);
     this.ctx.drawImage(this.spriteSheet, 
@@ -32,7 +31,7 @@ class Squirrelicon {
       this.draw();
     }
     this.favicon.href = this.faviconFrames[this.currentLoopIndex];
-    
+
     this.currentLoopIndex++;
     if (this.currentLoopIndex >= this.spriteCycle.length) {
       this.currentLoopIndex = 0;
