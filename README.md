@@ -22,7 +22,7 @@ Built using JavaScript and HTML5, Squirrel Jams is an endless runner game in the
 2. HTML5
 3. [BeepBox music maker](http://www.beepbox.co/#)
 
-## Screenshots
+## Gameplay
 
 1. Upon loading the site, players are greeted with a screen introducing the game and controls.
 

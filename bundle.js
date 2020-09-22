@@ -264,16 +264,16 @@ class Game {
   
   moveObjects() {
     Object.keys(this.obstacles).forEach(num => {
-      this.obstacles[num].forEach(branch => branch.move());
+      this.obstacles[num].forEach(tree => tree.move());
     })
   }
   
   removeObjects() {
     Object.keys(this.obstacles).forEach(num => {
       let currentObstacles = [];
-      this.obstacles[num].forEach(branch => {
-        if (branch.pos[1] < 800) {
-          currentObstacles.push(branch);
+      this.obstacles[num].forEach(tree => {
+        if (tree.pos[1] < 800) {
+          currentObstacles.push(tree);
         }
       })
       this.obstacles[num] = currentObstacles;
@@ -284,8 +284,8 @@ class Game {
     let dead = false;
     this.squirrels.forEach(squirrel => {
       Object.keys(this.obstacles).forEach(num => {
-        this.obstacles[num].forEach(branch => {
-          if (this.beenHit(squirrel, branch)) {
+        this.obstacles[num].forEach(tree => {
+          if (this.beenHit(squirrel, tree)) {
             dead = true;
           }
         })
@@ -294,11 +294,11 @@ class Game {
     return dead;
   }
 
-  beenHit(squirrel, branch) {
-    if (squirrel.pos[0] < branch.pos[0] + branch.size[0] &&
-        squirrel.pos[0] + squirrel.size[0] > branch.pos[0] &&
-        squirrel.pos[1] < branch.pos[1] + branch.size[1] &&
-        squirrel.pos[1] + squirrel.size[1] > branch.pos[1]) {
+  beenHit(squirrel, tree) {
+    if (squirrel.pos[0] < tree.pos[0] + tree.size[0] &&
+        squirrel.pos[0] + squirrel.size[0] > tree.pos[0] &&
+        squirrel.pos[1] < tree.pos[1] + tree.size[1] &&
+        squirrel.pos[1] + squirrel.size[1] > tree.pos[1]) {
       return true;
     }
   }

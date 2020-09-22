@@ -18,7 +18,7 @@ class Menu {
     this.ctx.fillText("Squirrel jamS", 640, 300);
 
     this.ctx.font = 'bold 35px titlefont';
-    this.ctx.fillText("press space to start & pause", 640, 400)
+    this.ctx.fillText("press space to start", 640, 400)
   }
 }
 
