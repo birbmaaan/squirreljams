@@ -6,7 +6,7 @@
     <script src="./dist/bundle.js"></script>
     <link rel="stylesheet" href="./dist/game.css">
     <title>Squirrel Jams</title>
-    <link rel="icon" href="./assets/favicon.ico" type="image/x-icon"/>
+    <link id="favicon" rel="icon" type="image/x-icon"/>
     <meta property="og:title" content="Squirrel Jams" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://birbmaaan.github.io/squirreljams/" />
@@ -14,6 +14,7 @@
     <meta property="og:description" content="You're several squirrels running up trees! Avoid the branches along the way." />
   </head>
   <body>
+    <canvas id="favicon-canvas" width=32 height=32></canvas>
     <canvas id="game-squirrels" width="1280px" height="720px"></canvas>
     <canvas id="game-canvas" width="1280px" height="720px"></canvas>
     <canvas id="game-level" width="1280px" height="720px"></canvas>
@@ -25,6 +26,7 @@
     <img id='squirrel' src="./assets/squirrelssprites.png">
     <img id="branches" src='./assets/branches.png'>
     <img id="pause-image" src='./assets/pause.png'>
+    <img id="squirrelicon" src='./assets/squirrelicon.png'>
     <audio id="game-music" src="./assets/levelmusic.wav" 
       crossOrigin="anonymous"
       muted="true"

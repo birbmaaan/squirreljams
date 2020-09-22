@@ -572,15 +572,20 @@ class GameView {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_view_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_view.js */ "./src/game_view.js");
+/* harmony import */ var _sprites_squirrelicon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sprites/squirrelicon */ "./src/sprites/squirrelicon.js");
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('game-canvas');
   const ctx = canvas.getContext('2d')
   window.ctx = ctx;
+
+  const favicon = new _sprites_squirrelicon__WEBPACK_IMPORTED_MODULE_1__["default"](true);
   window.onload = () => {
     const newGame = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
     newGame.drawControlsMenu();
+    setInterval(() => {favicon.step(0, 0)}, 10);
   }
 })
 
@@ -872,6 +877,7 @@ class SquirrelSprite {
   }
 
   step(canvasX, canvasY) {
+    debugger;
     this.draw(this.cycleLoop[this.currentLoopIndex], 1, canvasX - 30, canvasY - 5);
     this.currentLoopIndex++;
     if (this.currentLoopIndex >= this.cycleLoop.length) {
@@ -898,6 +904,60 @@ class SquirrelSprite {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (SquirrelSprite);
+
+/***/ }),
+
+/***/ "./src/sprites/squirrelicon.js":
+/*!*************************************!*\
+  !*** ./src/sprites/squirrelicon.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class Squirrelicon {
+  constructor(favicon) {
+    this.faviconCanvas = document.getElementById('favicon-canvas');
+    this.ctx = this.faviconCanvas.getContext('2d');
+    this.spriteSheet = document.getElementById('squirrelicon');
+    this.favicon = document.getElementById("favicon");
+    if (favicon) {
+      this.width = 32;
+      this.height = 32;
+    } else {
+      this.width = 100;
+      this.height = 100;
+    }
+    this.spriteCycle = [0, 27];
+    this.currentLoopIndex = 0;
+    this.faviconFrames = {};
+  }
+
+  draw() {
+    const { width, height } = this;
+    this.ctx.clearRect(0, 0, 100, 100);
+    this.ctx.drawImage(this.spriteSheet, 
+      this.spriteCycle[this.currentLoopIndex], 0, 22, 22, 
+      0, 0, width, height);
+
+    this.faviconFrames[this.currentLoopIndex] = this.faviconCanvas.toDataURL('image/x-icon');
+  }
+
+  step() {
+    if (!this.faviconFrames[this.currentLoopIndex]) {
+      this.draw();
+    }
+    this.favicon.href = this.faviconFrames[this.currentLoopIndex];
+
+    this.currentLoopIndex++;
+    if (this.currentLoopIndex >= this.spriteCycle.length) {
+      this.currentLoopIndex = 0;
+    }
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Squirrelicon);
 
 /***/ }),
 
