@@ -19,6 +19,10 @@ img {
   display: none;
 }
 
+#favicon-canvas {
+  display: none;
+}
+
 #logo-link {
   display: block;
 }
