@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.onload = () => {
     const newGame = new _game_view_js__WEBPACK_IMPORTED_MODULE_0__["default"](ctx);
     newGame.drawControlsMenu();
-    setInterval(() => {favicon.step(0, 0)}, 10);
+    setInterval(() => {favicon.step(0, 0)}, 300);
   }
 })
 

@@ -10,6 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.onload = () => {
     const newGame = new GameView(ctx);
     newGame.drawControlsMenu();
-    setInterval(() => {favicon.step(0, 0)}, 10);
+    setInterval(() => {favicon.step(0, 0)}, 300);
   }
 })
