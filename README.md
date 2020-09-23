@@ -8,13 +8,17 @@ Built using JavaScript and HTML5, Squirrel Jams is an endless runner game in the
 **1. first squirrel:**
   * left: D
   * right: F
+  
 **2. second squirrel:**
   * left: J
   * right: K
+  
 **3. third squirrel:**
   * left: A
   * right: S
+  
 **4. pause:** space
+
 **5. sound on/off:** M
 
 ## Technologies used
