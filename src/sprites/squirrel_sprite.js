@@ -14,10 +14,7 @@ class SquirrelSprite {
 
   draw(sheetX, sheetY, canvasX, canvasY) {
     const {width, height} = this;
-
     this.ctx.drawImage(this.spriteSheet, sheetX, sheetY, 22, 22, canvasX, canvasY, width, height);
-    // this.ctx.drawImage(this.spriteSheet, 55, 1, 22, 22, 400, 400, width, height);
-    // this.ctx.drawImage(this.spriteSheet, 81, 1, 22, 22, 500, 400, width, height);
   }
 
   step(canvasX, canvasY) {

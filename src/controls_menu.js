@@ -27,7 +27,7 @@ class ControlsMenu {
     
     this.ctx.fillText('Pause.....................space', 640, 460);
     this.ctx.fillText('Sound on/off................m', 640, 500);
-    this.ctx.fillText('Pause anytime to see the controls', 640, 600);
+    this.ctx.fillText('Pause anytime for controls', 640, 600);
     this.ctx.fillText("press space to continue", 640, 680);
   }
 }
