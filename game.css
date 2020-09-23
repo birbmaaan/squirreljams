@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'titlefont';
-  src: url('../assets/titlefont.ttf');
+  src: url('./assets/titlefont.ttf');
 }
 
 body {
@@ -41,18 +41,17 @@ img {
 
 #game-level {
   z-index: 2;
-  /* background-image: url('../assets/Trunk\ 04.png'); */
   background-size: 100%;
 }
 
 #game-background {
   z-index: 1;
-  background-image: url('../assets/background3.png');
+  background-image: url('./assets/background3.png');
 }
 
 #menu-image {
   z-index: 3;
-  background-image: url('../assets/menu.png');
+  background-image: url('./assets/menu.png');
 }
 
 footer {
@@ -63,13 +62,11 @@ footer {
   width: 1280px;
   justify-content: space-around;
   color: white;
-  /* font-size: 16px; */
 }
 
 #author {
   display: flex;
   font-size: 18px;
-  /* flex-direction: column; */
 }
 
 #author a {
