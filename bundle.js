@@ -264,16 +264,16 @@ class Game {
   
   moveObjects() {
     Object.keys(this.obstacles).forEach(num => {
-      this.obstacles[num].forEach(tree => tree.move());
+      this.obstacles[num].forEach(branch => branch.move());
     })
   }
   
   removeObjects() {
     Object.keys(this.obstacles).forEach(num => {
       let currentObstacles = [];
-      this.obstacles[num].forEach(tree => {
-        if (tree.pos[1] < 800) {
-          currentObstacles.push(tree);
+      this.obstacles[num].forEach(branch => {
+        if (branch.pos[1] < 800) {
+          currentObstacles.push(branch);
         }
       })
       this.obstacles[num] = currentObstacles;
@@ -284,8 +284,8 @@ class Game {
     let dead = false;
     this.squirrels.forEach(squirrel => {
       Object.keys(this.obstacles).forEach(num => {
-        this.obstacles[num].forEach(tree => {
-          if (this.beenHit(squirrel, tree)) {
+        this.obstacles[num].forEach(branch => {
+          if (this.beenHit(squirrel, branch)) {
             dead = true;
           }
         })
@@ -294,11 +294,11 @@ class Game {
     return dead;
   }
 
-  beenHit(squirrel, tree) {
-    if (squirrel.pos[0] < tree.pos[0] + tree.size[0] &&
-        squirrel.pos[0] + squirrel.size[0] > tree.pos[0] &&
-        squirrel.pos[1] < tree.pos[1] + tree.size[1] &&
-        squirrel.pos[1] + squirrel.size[1] > tree.pos[1]) {
+  beenHit(squirrel, branch) {
+    if (squirrel.pos[0] < branch.pos[0] + branch.size[0] &&
+        squirrel.pos[0] + squirrel.size[0] > branch.pos[0] &&
+        squirrel.pos[1] < branch.pos[1] + branch.size[1] &&
+        squirrel.pos[1] + squirrel.size[1] > branch.pos[1]) {
       return true;
     }
   }
@@ -870,14 +870,10 @@ class SquirrelSprite {
 
   draw(sheetX, sheetY, canvasX, canvasY) {
     const {width, height} = this;
-
     this.ctx.drawImage(this.spriteSheet, sheetX, sheetY, 22, 22, canvasX, canvasY, width, height);
-    // this.ctx.drawImage(this.spriteSheet, 55, 1, 22, 22, 400, 400, width, height);
-    // this.ctx.drawImage(this.spriteSheet, 81, 1, 22, 22, 500, 400, width, height);
   }
 
   step(canvasX, canvasY) {
-    debugger;
     this.draw(this.cycleLoop[this.currentLoopIndex], 1, canvasX - 30, canvasY - 5);
     this.currentLoopIndex++;
     if (this.currentLoopIndex >= this.cycleLoop.length) {
