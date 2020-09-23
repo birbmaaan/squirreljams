@@ -18,7 +18,6 @@ class SquirrelSprite {
   }
 
   step(canvasX, canvasY) {
-    debugger;
     this.draw(this.cycleLoop[this.currentLoopIndex], 1, canvasX - 30, canvasY - 5);
     this.currentLoopIndex++;
     if (this.currentLoopIndex >= this.cycleLoop.length) {
