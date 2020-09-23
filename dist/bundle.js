@@ -462,7 +462,8 @@ class GameView {
     this.ctx.fillStyle = 'white';
     this.ctx.textAlign = 'left';
     const currentScore = Math.floor(this.frames / 60);
-    this.ctx.fillText(`distance: ${currentScore}`, 80, 40);
+    // this.ctx.fillText(`distance: ${currentScore}`, 80, 40);
+    this.ctx.fillText(`distance: ${currentScore}`, 340, 710);
   }
 
   bindKeyHandlers() {
